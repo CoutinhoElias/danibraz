@@ -1,72 +1,111 @@
-{% load staticfiles i18n compress%}<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{% block title %}Dani Braz{% endblock title %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+{% load staticfiles i18n compress%}
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <title>{% block title %}Dani Braz{% endblock title %}</title>
 
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <![endif]-->
+      <!--Import Google Icon Font-->
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    {% block css %}
-    <!-- Latest compiled and minified Bootstrap 4 Alpha 4 CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
 
-    <!-- Your stuff: Third-party CSS libraries go here -->
-    {% compress css %}
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+         {% compress css %}
     <!-- This file stores project-specific CSS -->
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
     {% endcompress %}
-    {% endblock %}
 
-  </head>
+    </head>
 
-  <body>
+    <body>
+        <nav>
+            <div class="nav-wrapper blue darken-1">
+              <a href="#!" class="brand-logo">Dani Braz</a>
 
-    <div class="m-b-1">
-      <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="{% url 'home' %}">Dani Braz</a>
+              <!--Botão que se ativa quando navegador de celulares-->
+              <a href="#" data-activates="mobile-demo" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'about' %}">About</a>
-            </li>
-            {% if request.user.is_authenticated %}
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a>
-              </li>
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
-              </li>
-            {% else %}
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-              </li>
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
-              </li>
-            {% endif %}
-          </ul>
-        </div>
-      </nav>
+              <!--Menu para resoluções normais-->
+              <ul class="right hide-on-med-and-down">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
 
-    </div>
+                {% if request.user.is_authenticated %}
+                  <li>
+                    {# URL provided by django-allauth/account/urls.py #}
+                    <a href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a>
+                  </li>
+                  <li class="nav-item">
+                    {# URL provided by django-allauth/account/urls.py #}
+                    <a href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
+                  </li>
+                {% else %}
+                  <li>
+                    {# URL provided by django-allauth/account/urls.py #}
+                    <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                  </li>
+                  <li>
+                    {# URL provided by django-allauth/account/urls.py #}
+                    <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                  </li>
+                {% endif %}
+
+              </ul>
+
+              <!--Menu para resoluções pequenas(Moblile)-->
+              <ul class="side-nav" id="mobile-demo">
+                <li>
+                    <div class="userView">
+                      <div class="background">
+                        <img src="{% static 'images/danibraz.jpg' %}" class="responsive-img">
+                      </div>
+
+                      <a href="#!user"><img class="circle" src="{% static 'images/joao.png' %}"></a>
+                      <a href="#!name"><span class="white-text name">Elias Coutinho</span></a>
+                      <a href="#!email"><span class="white-text email">coutinho.elias@gmail.com</span></a>
+                    </div>
+                </li>
+
+
+
+
+
+                <ul class="collapsible collapsible-accordion">
+<!--                    <li class="bold"><a href="{% url 'home' %}" class="waves-effect waves-teal">Home</a></li>
+                    <li class="bold"><a href="{% url 'about' %}" class="waves-effect waves-teal">About</a></li>-->
+                    <li><a class="collapsible-header  waves-effect waves-teal">User</a>
+                      <div class="collapsible-body">
+                        <ul>
+                          {% if request.user.is_authenticated %}
+                            <li>
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a>
+                            </li>
+                            <li class="nav-item">
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
+                            </li>
+                          {% else %}
+                            <li>
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                            </li>
+                            <li class="active">
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                            </li>
+                          {% endif %}
+                        </ul>
+                      </div>
+                    </li>
+                </ul>
+              </ul>
+            </div>
+        </nav>
+
 
     <div class="container">
 
@@ -82,25 +121,20 @@
 
     </div> <!-- /container -->
 
-    {% block modal %}{% endblock modal %}
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    {% block javascript %}
-      <!-- Required by Bootstrap v4 Alpha 4 -->
-      <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 
-      <!-- Your stuff: Third-party javascript libraries go here -->
+      <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 
-      <!-- place project specific Javascript in this file -->
-      {% compress js %}
-      <script src="{% static 'js/project.js' %}"></script>
-      {% endcompress %}
+      <script type="text/javascript">
+          $(function(){
+            $(".button-collapse").sideNav();
+            $('.collapsible').collapsible();
 
-    {% endblock javascript %}
-  </body>
-</html>
- 
+          });
+      </script>
+
+    </body>
+  </html>

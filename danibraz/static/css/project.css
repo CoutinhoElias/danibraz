@@ -1,38 +1,27 @@
-/* These styles are generated from project.scss. */
-
-.alert-debug {
-  color: black;
-  background-color: white;
-  border-color: #d6e9c6;
+body {
+    background: #eee;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
 }
 
-.alert-error {
-  color: #b94a48;
-  background-color: #f2dede;
-  border-color: #eed3d7;
+
+.card-panel {
+  transition: box-shadow .25s;
+  padding: $card-padding;
+  margin: $element-top-margin 0 $element-bottom-margin 0;
+  border-radius: 15px;
+  @extend .z-depth-1;
+  background-color: $card-bg-color;
 }
 
-/* This is a fix for the bootstrap4 alpha release */
-@media (max-width: 47.9em) {
-  .navbar-nav .nav-item {
-    float: none;
-    width: 100%;
-    display: inline-block;
-  }
 
-  .navbar-nav .nav-item + .nav-item {
-    margin-left: 0;
-  }
-
-  .nav.navbar-nav.pull-xs-right {
-    float: none !important;
-  }
-}
-
-/* Display django-debug-toolbar.
-   See https://github.com/django-debug-toolbar/django-debug-toolbar/issues/742
-   and https://github.com/pydanny/cookiecutter-django/issues/317
-*/
-[hidden][style="display: block;"] {
-  display: block !important;
+.side-nav .collapsible-body li > a {
+    color: rgba(0,0,0,0.87);
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    height: 48px;
+    line-height: 48px;
+    padding: 0 32px;
 }

@@ -109,7 +109,7 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://postgres:abc123@127.0.0.1:5432/danibraz'),
+    'default': env.db('DATABASE_URL', default='postgres://postgres:abc123@localhost:5432/danibraz'),
 
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
@@ -124,7 +124,7 @@ DATABASES['default']['ATOMIC_REQUESTS'] = True
 TIME_ZONE = 'America/Fortaleza'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
