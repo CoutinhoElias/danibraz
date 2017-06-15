@@ -54,3 +54,5 @@ django-compressor==2.1.1
 
 
 # Your custom requirements go here
+djangorestframework==3.6.3
+django-material==1.0.0
