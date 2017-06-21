@@ -2,7 +2,6 @@
 from django.db import models
 from django.utils import timezone
 
-
 from danibraz.users.models import User
 
 class Booking(models.Model):
@@ -25,7 +24,7 @@ class Booking(models.Model):
     color = models.CharField('cor', max_length=15, choices=CORES_CHOICES, default='blue')
     overlap = models.BooleanField('Sobrepor', default=True) #Áreas vermelhas onde nenhum evento pode ser descartado (Período que não pode receber nenhum agendamento)
     holiday = models.BooleanField('Feriado')
-    participants = models.ManyToManyField(User, related_name="item_participantes")
+    participants = models.ManyToManyField('users.User', related_name="item_participantes")
     #rendering: 'background' Áreas onde "Reunião" deve ser descartado (Sem permissão de Incluir/Editar/Excluir o evendo)
     class Meta:
         verbose_name = 'reserva'
