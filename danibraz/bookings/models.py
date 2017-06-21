@@ -2,8 +2,8 @@
 from django.db import models
 from django.utils import timezone
 
-from django.contrib.auth.models import User
 
+from danibraz.users.models import User
 
 class Booking(models.Model):
     # CHOICES NO MODELS VAI TER UMA LISTAGEM NO ADMIN

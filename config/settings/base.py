@@ -46,6 +46,7 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
+    'material',
     'crispy_forms',  # Form layouts
     'allauth',  # registration
     'allauth.account',  # registration

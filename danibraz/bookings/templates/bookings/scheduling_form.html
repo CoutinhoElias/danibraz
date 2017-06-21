@@ -1,144 +1,28 @@
-{% extends "base.html" %}
-{% load static %}
+<!--INCLUINDO O FORM FICA LEGAL E SEM FUNCIONAR, RETIRANDO FICA FEIO EM FUNCIONANDO-->
+{% extends "account/base.html" %}
+<!--{% load static %}-->
+
+
+<!--{% include 'material/includes/material_css.html' %}
+<script src="{% static 'material/js/jquery.js' %}"></script>
+{% include 'material/includes/material_js.html' %}-->
+
+
 {% load material_form %}
 
-{% block title %}
-    Contato | {{ block.super }}
-{% endblock %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Agendamento" %}{% endblock %}
+
+{% block inner %}
 
 
-{% block css_person %}
-    <style type="text/css">
-        body {
-            background: #eee;
-            display: flex;
-            position: relative;
-            min-height: 100vh;
-            flex-direction: column;
-
-        }
+    <form method="POST">
+        {% csrf_token %}
+        {% form form=form %}{% endform %}
+        <button type="submit" name="_submit" class="btn">Submit</button>
+    </form>
 
 
-        .row .col.m6 {
-            width: 45% !important;
-            /*transform:rotate(90deg); gira para qualquer angulo*/
-        }
-
-        .selector-chooser{
-            width: 10% !important;
-
-        }
-
-{#        CAMPOS SELETORES        #}
-
-        .selector-chosen select{
-            height:120px
-        }
-
-        .selector-available select{
-            height:120px
-        }
-
-        /*SE REMOVER OCULTA OS BOTOES*/
-        .change-form  .selector-add,.change-form .multiselect .selector-remove{
-            background-color:#80c883
-        }
-
-        .card .card-content {
-            margin-top: 0px !important;
-
-        }
-
-{#        .container{#}
-{#            height: 800px;#}
-{#        }#}
-
-
-    </style>
-{% endblock %}
-
-
-{% block container %}
-
-<script>
-    // Use same django for material and django admin
-    var django = django || {};
-    django.jQuery = jQuery.noConflict(true);
-    window.jQuery = window.$ = django.jQuery
-</script>
-<script src="{% static 'adm/jsi18n.js' %}"></script>
-<script src="{% static 'adm/js/core.js' %}"></script>
-<script src="{% static 'adm/js/jquery.min.js' %}"></script>
-<script src="{% static 'adm/js/jquery.init.js' %}"></script>
-<script src="{% static 'adm/js/adm/RelatedObjectLookups.js' %}"></script>
-<script src="{% static 'adm/js/actions.min.js' %}"></script>
-<script src="{% static 'adm/js/SelectBox.js' %}"></script>
-<script src="{% static 'adm/js/SelectFilter2.js' %}"></script>
-<script src="{% static 'adm/js/related-widget-wrapper.js' %}"></script>
-
-<div class="container expand-on-small-only">
-    <div class="row valign change-form">
-        <div class="m8 offset-m2 l8 offset-l2">
-            <div class="card" id="card-radius">
-            <form method="POST" enctype="multipart/form-data" class="viewform">{% csrf_token %}
-
-                <div class="card-content">
-                    {% form %}
-
-                    {% endform %}
-                </div>
-
-                <div class="card-action">
-                    <div class="right-align">
-                        <button class="waves-effect waves-light btn" type="submit">Enviar</button>
-                    </div>
-                </div>
-            </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript">
-if(! /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-    addEvent(window, "load", function(e) {
-        SelectFilter.init("id_participants", "participants", 0, "/static/admin/");
-    });
-}
-</script>
-
-{% endblock %}
-
-{% block js %}
-    <script src="{% static 'material/js/jquery-2.2.0.js' %}"></script>
-    <script src="{% static 'materialize/js/materialize.min.js' %}"></script>
-
-    <script src="{% static 'material/js/jquery.datetimepicker.js' %}"></script>
-    <script src="{% static 'material/js/jquery.formset.js' %}"></script>
-    <script src="{% static 'material/js/materialize.forms.js' %}"></script>
-    <script src="{% static 'materialize/js/app.js' %}"></script>
-
-    <script>
-        $('.datepicker').pickadate({
-            selectMonths: true, // Creates a dropdown to control month
-            selectYears: 15 // Creates a dropdown of 15 years to control year
-        });
-    </script>
-
-
-    <script>
-        // Use same django for material and django admin
-        var django = django || {};
-        django.jQuery = jQuery.noConflict(true);
-        window.jQuery = window.$ = django.jQuery
-    </script>
-    <script src="{% static 'adm/jsi18n.js' %}"></script>
-    <script src="{% static 'adm/js/core.js' %}"></script>
-    <script src="{% static 'adm/js/jquery.min.js' %}"></script>
-    <script src="{% static 'adm/js/jquery.init.js' %}"></script>
-    <script src="{% static 'adm/js/adm/RelatedObjectLookups.js' %}"></script>
-    <script src="{% static 'adm/js/actions.min.js' %}"></script>
-    <script src="{% static 'adm/js/SelectBox.js' %}"></script>
-    <script src="{% static 'adm/js/SelectFilter2.js' %}"></script>
-    <script src="{% static 'adm/js/related-widget-wrapper.js' %}"></script>
 {% endblock %}
