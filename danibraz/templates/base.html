@@ -106,6 +106,34 @@
                         </ul>
                       </div>
                     </li>
+
+
+
+                    <li><a class="collapsible-header  waves-effect waves-teal">{% trans "Booking" %}</a>
+                      <div class="collapsible-body">
+                        <ul>
+                          {% if request.user.is_authenticated %}
+                            <li>
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a href="{% url 'booking:scheduling'  %}">{% trans "Reserva" %}</a>
+                            </li>
+                            <li class="nav-item">
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a href="{% url 'booking:list' %}">{% trans "Agenda" %}</a>
+                            </li>
+                          {% else %}
+                            <li class="nav-item">
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a href="{% url 'booking:list' %}">{% trans "Agenda" %}</a>
+                            </li>
+                            <li class="active">
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                            </li>
+                          {% endif %}
+                        </ul>
+                      </div>
+                    </li>
                 </ul>
               </ul>
             </div>
