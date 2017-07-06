@@ -59,6 +59,7 @@ LOCAL_APPS = [
     'danibraz.users.apps.UsersConfig',
     'danibraz.bookings.apps.BookingsConfig',
     # Your stuff: custom apps go here
+    'danibraz.persons.apps.PersonsConfig',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

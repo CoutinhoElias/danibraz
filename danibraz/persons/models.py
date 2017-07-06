@@ -3,8 +3,8 @@ from django.db import models
 
 
 class Person(models.Model):
-    class Meta:
-        abstract = True
+    # class Meta:
+    #     abstract = True
 
     name = models.CharField(max_length=100)
     birthday = models.DateField()
@@ -14,6 +14,7 @@ class Person(models.Model):
 
 class Client(Person):
     compra_sempre = models.BooleanField(default=False)
+    person = models.ForeignKey('persons.Person', verbose_name='Pessoa', related_name='Client_person')
 
 
 class Employee(Person):

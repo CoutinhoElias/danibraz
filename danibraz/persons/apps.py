@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class PersonsConfig(AppConfig):
-    name = 'persons'
+    name = 'danibraz.persons'
+    verbose_name = 'Pessoas'
