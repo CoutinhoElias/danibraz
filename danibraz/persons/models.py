@@ -14,7 +14,12 @@ class Person(models.Model):
 
 class Client(Person):
     compra_sempre = models.BooleanField(default=False)
-    person = models.ForeignKey('persons.Person', verbose_name='Pessoa', related_name='Person')
+    # person = models.ForeignKey('persons.Person', verbose_name='Pessoa', related_name='Person')
+    def save(self, *args, **kwargs):
+        # self.operacao = CONTA_OPERACAO_DEBITO
+
+
+        super(Client, self).save(*args, **kwargs)
 
 
 class Employee(Person):
