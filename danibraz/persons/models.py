@@ -14,7 +14,7 @@ class Person(models.Model):
 
 class Client(Person):
     compra_sempre = models.BooleanField(default=False)
-    person = models.ForeignKey('persons.Person', verbose_name='Pessoa', related_name='Client_person')
+    person = models.ForeignKey('persons.Person', verbose_name='Pessoa', related_name='Person')
 
 
 class Employee(Person):
