@@ -31,6 +31,15 @@ from danibraz.persons.models import Addresses, Client
 #         context = {'form': ClientsForm()}
 #         return render(request, 'persons/person.html', context)
 
+
+
+class addressesInline(extra_views.InlineFormSet):
+    model = Addresses
+    fields = '__all__'
+    # fields = ['public_place', 'number', 'city', 'state', 'zipcode', 'country', 'phone']
+    extra = 1  # Define aquantidade de linhas a apresentar.
+
+
 class clients(LayoutMixin, extra_views.NamedFormsetsMixin, extra_views.CreateWithInlinesView):
     title = "Inclua um cliente."
     model = Client
@@ -43,12 +52,6 @@ class clients(LayoutMixin, extra_views.NamedFormsetsMixin, extra_views.CreateWit
                  ),
         Inline('Endereços', addressesInline),
     )
-
-class addressesInline(extra_views.InlineFormSet):
-    model = Addresses
-    fields = '__all__'
-    # fields = ['public_place', 'number', 'city', 'state', 'zipcode', 'country', 'phone']
-    extra = 1  # Define aquantidade de linhas a apresentar.
 
 
 # def scheduling_edit(request, id_booking):
