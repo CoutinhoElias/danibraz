@@ -1,0 +1,32 @@
+<!--INCLUINDO O FORM FICA LEGAL E SEM FUNCIONAR, RETIRANDO FICA FEIO EM FUNCIONANDO-->
+{% extends "account/base.html" %}
+<!--{% load static %}-->
+
+
+
+<!--{% include 'material/includes/material_css.html' %}
+<script src="{% static 'material/js/jquery.js' %}"></script>
+{% include 'material/includes/material_js.html' %}-->
+
+
+{% load material_form %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Agendamento" %}{% endblock %}
+
+{% block inner %}
+
+
+    <form method="POST">
+        {% csrf_token %}
+        <!--{% form form=form %}{% endform %}-->
+        {% form %}
+
+        {% endform %}
+        <button type="submit" name="_submit" class="btn">Submit</button>
+    </form>
+
+
+{% endblock %}
