@@ -5,31 +5,31 @@ from material import Layout, Fieldset, Row, Span6
 from danibraz.persons.models import Client
 
 
-# class ClientsForm(forms.ModelForm):
-#     name = forms.CharField(label='Nome', required=True)
-#     birthday = forms.DateField(label='Nascimento', required=False)
-#     address = forms.CharField(label='Endereço completo')
-#     purchase_limit = forms.DecimalField(label='Limite de compra')
-#     compra_sempre = forms.BooleanField(label='Compra sempre?', required=False)
-#
-#     class Meta:
-#         model = Client
-#         fields = '__all__'
-#
-#     layout = Layout(
-#         Fieldset("Inclua um cliente",
-#                  Row('name', ),
-#                  Row('birthday','purchase_limit'),
-#                  Row('address', ),
-#                  Row('compra_sempre', ),
-#                  )
-#     )
+class ClientsForm(forms.ModelForm):
+    name = forms.CharField(label='Nome', required=True)
+    birthday = forms.DateField(label='Nascimento', required=False)
+    address1 = forms.CharField(label='Endereço completo')
+    purchase_limit = forms.DecimalField(label='Limite de compra')
+    compra_sempre = forms.BooleanField(label='Compra sempre?', required=False)
+
+    class Meta:
+        model = Client
+        fields = '__all__'
+
+    layout = Layout(
+        Fieldset("Inclua um cliente",
+                 Row('name', ),
+                 Row('birthday','purchase_limit'),
+                 Row('address', ),
+                 Row('compra_sempre', ),
+                 )
+    )
 
 
 class EmployeeForm(forms.ModelForm):
     name = forms.CharField(label='Nome', required=True)
     birthday = forms.DateField(label='Nascimento', required=False)
-    address = forms.CharField(label='Endereço completo')
+    address1 = forms.CharField(label='Endereço completo')
     purchase_limit = forms.DecimalField(label='Limite de compra')
     ctps = forms.CharField(label='Carteira de trabalho', required=False)
     salary = forms.DecimalField(label='Salário')
@@ -43,7 +43,7 @@ class EmployeeForm(forms.ModelForm):
                  Row('name', ),
                  Row(Span6('birthday'), Span6('ctps'), ),
                  Row(Span6('purchase_limit'),Span6('salary'),),
-                 Row('address', ),
+                 Row('address1', ),
                  )
     )
 

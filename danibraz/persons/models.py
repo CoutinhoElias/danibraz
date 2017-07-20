@@ -6,10 +6,10 @@ class Person(models.Model):
     # class Meta:
     #     abstract = True
 
-    name = models.CharField(max_length=100)
-    birthday = models.DateField()
-    address1 = models.CharField(max_length=100)
-    purchase_limit = models.DecimalField(max_digits=15, decimal_places=2)
+    name = models.CharField('Nome',max_length=100)
+    birthday = models.DateField('Aniversário')
+    address1 = models.CharField('Endereço 1',max_length=100)
+    purchase_limit = models.DecimalField('Limite de compra',max_digits=15, decimal_places=2)
 
 
     class Meta:
@@ -36,20 +36,33 @@ class Person(models.Model):
             return None
 
 
-class Addresses(models.Model):
+class Address(models.Model):
+    KINDS = (
+        ('P', 'PRINCIPAL'),
+        ('C', 'COBRANÇA'),
+        ('E', 'ENTREGA'),
+    )
     person = models.ForeignKey('Person')
-    public_place = models.CharField(max_length=150)
-    number = models.CharField(max_length=150)
-    city = models.CharField(max_length=150)
-    state = models.CharField(max_length=150)
-    zipcode = models.CharField(max_length=10)
-    country = models.CharField(max_length=150)
-    phone = models.CharField(max_length=50)
+    kynd = models.CharField('Tipo', max_length=1, choices=KINDS)
+    public_place = models.CharField('Logradouro',max_length=150)
+    number = models.CharField('Número',max_length=150)
+    city = models.CharField('Cidade',max_length=150)
+    state = models.CharField('Estado',max_length=150)
+    zipcode = models.CharField('Cep',max_length=10)
+    country = models.CharField('País',max_length=150)
+    phone = models.CharField('Fone',max_length=50)
+
+    class Meta:
+        verbose_name_plural = 'endereços'
+        verbose_name = 'endereço'
+
+    def __str__(self):
+        return self.public_place
 
 
 
 class Client(Person):
-    compra_sempre = models.BooleanField(default=False)
+    compra_sempre = models.BooleanField('Compra Sempre',default=False)
 
     def save(self, *args, **kwargs):
         super(Client, self).save(*args, **kwargs)
@@ -61,8 +74,8 @@ class Client(Person):
 
 
 class Employee(Person):
-    ctps = models.CharField(max_length=25)
-    salary = models.DecimalField(max_digits=15, decimal_places=2)
+    ctps = models.CharField('Carteira de Trabalho',max_length=25)
+    salary = models.DecimalField('Salário',max_digits=15, decimal_places=2)
 
 
     def save(self, *args, **kwargs):
