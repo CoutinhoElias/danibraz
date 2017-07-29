@@ -1,5 +1,4 @@
 from django import forms
-from django.forms import Form
 from material import Layout, Fieldset, Row, Span6
 
 from danibraz.persons.models import Client
@@ -20,7 +19,7 @@ class ClientsForm(forms.ModelForm):
         Fieldset("Inclua um cliente",
                  Row('name', ),
                  Row('birthday','purchase_limit'),
-                 Row('address', ),
+                 Row('address1', ),
                  Row('compra_sempre', ),
                  )
     )
