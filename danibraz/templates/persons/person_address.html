@@ -1,0 +1,22 @@
+{% extends "account/base.html" %}
+
+{% load material_form %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Address" %}{% endblock %}
+
+{% block inner %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <!--{% form form=form %}{% endform %}-->
+        {% form form=form %}
+
+        {% endform %}
+        <button type="submit" name="_submit" class="btn">Submit</button>
+    </form>
+
+
+{% endblock %}

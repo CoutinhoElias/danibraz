@@ -3,9 +3,6 @@ from django.db import models
 
 
 class Person(models.Model):
-    class Meta:
-        app_label = "persons"
-
     name = models.CharField('Nome',max_length=100)
     birthday = models.DateField('Aniversário')
     address1 = models.CharField('Endereço 1',max_length=100)
@@ -35,6 +32,9 @@ class Person(models.Model):
     #     else:
     #         return None
 
+    def get_absolute_url(self):
+        return u'/cadastro/pessoas'
+
 
 class Address(models.Model):
     KINDS = (
@@ -42,7 +42,7 @@ class Address(models.Model):
         ('C', 'COBRANÇA'),
         ('E', 'ENTREGA'),
     )
-    person = models.ForeignKey('Person')
+    person = models.ForeignKey('persons.Person', related_name='address')
     kynd = models.CharField('Tipo', max_length=1, choices=KINDS)
     public_place = models.CharField('Logradouro',max_length=150)
     number = models.CharField('Número',max_length=150)
@@ -85,3 +85,16 @@ class Employee(Person):
     class Meta:
         verbose_name = 'Funcionário'
         verbose_name_plural = 'Funcionários'
+
+"""---------------------------------------------------------------"""
+
+
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+    title_author = models.CharField('Titulo Autor', max_length=100)
+
+class Book(models.Model):
+    author = models.ForeignKey('Author')
+    title1 = models.CharField('Titulo 1', max_length=100)
+    title2 = models.CharField('Titulo 2', max_length=100)
+    title3 = models.CharField('Titulo 3', max_length=100)

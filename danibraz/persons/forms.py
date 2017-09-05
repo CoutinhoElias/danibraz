@@ -1,7 +1,10 @@
-from django import forms
-from material import Layout, Fieldset, Row, Span6
+from material import *
 
-from danibraz.persons.models import Client
+from danibraz.persons.models import Client, Employee, Person, Address
+
+from django import forms
+
+#from danibraz.persons.views import AddressInline
 
 
 class ClientsForm(forms.ModelForm):
@@ -34,7 +37,7 @@ class EmployeeForm(forms.ModelForm):
     salary = forms.DecimalField(label='Salário')
 
     class Meta:
-        model = Client
+        model = Employee
         fields = '__all__'
 
     layout = Layout(
@@ -47,27 +50,58 @@ class EmployeeForm(forms.ModelForm):
     )
 
 
-# class AddressForm(forms.Form):
-#     person = forms.CharField(max_length=250)
-#     public_place = forms.CharField(max_length=250)
-#     number = forms.CharField(max_length=100)
-#     city = forms.CharField(max_length=100)
-#     state = forms.CharField(max_length=10)
-#     zipcode = forms.CharField(max_length=10)
-#     country = forms.CharField(max_length=10)
-#     phone = forms.CharField(max_length=10)
-#
-#     class Meta:
-#         model = Address
-#         exclude = ['person']
-#
-#     layout = Layout(
-#         'public_place',
-#         'number',
-#         'city',
-#         Row('state', 'zipcode'),
-#         Row('country', 'phone'),
-#     )
+"""----------------------------------------------------------------------------------"""
 
-# AddressFormSet = formset_factory(AddressForm, extra=3, can_delete=True)
+class PersonForm(forms.ModelForm):
+    name = forms.CharField(label='Nome', required=True)
+    birthday = forms.DateField(label='Nascimento', required=False)
+    address1 = forms.CharField(label='Endereço completo')
+    purchase_limit = forms.DecimalField(label='Limite de compra')
 
+    class Meta:
+        model = Person
+        fields = '__all__'
+
+    layout = Layout(
+        # Campos do Persons
+        Fieldset("Inclua uma pessoa",
+                 Row('name', ),
+                 Row('birthday','purchase_limit'),
+                 Row('address1', ),
+                 ),
+        #Inline dos endereços
+        #Inline('Endereços Com form', AddressInline,),
+
+    )
+
+KIND = (
+    (None, 'Selecione o Tipo'),
+    ('P', 'PRINCIPAL'),
+    ('C', 'COBRANÇA'),
+    ('E', 'ENTREGA'))
+
+
+class AddressForm(forms.ModelForm):
+    person = forms.ModelChoiceField(label='Pessoa', required=True, queryset=Person.objects.all())
+    kynd = forms.ChoiceField(label='Tipo de endereço',choices=KIND)
+    public_place = forms.CharField(label='Endereço completo')
+    number = forms.CharField(label='Número')
+    city = forms.CharField(label='Cidade')
+    state = forms.CharField(label='Estado')
+    zipcode = forms.CharField(label='Cep')
+    country = forms.CharField(label='País')
+    phone = forms.CharField(label='Fone')
+
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+    layout = Layout(
+        # Campos do Persons
+        Fieldset("Inclua um endereço",
+                 Row('person','phone', 'kynd' ),
+                 Row('public_place','number'),
+                 Row('zipcode', 'city','state',),
+                 Row('country', ),
+                 ),
+    )
