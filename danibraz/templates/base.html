@@ -141,6 +141,33 @@
                         </ul>
                       </div>
                     </li>
+
+
+                    <li><a class="collapsible-header  waves-effect waves-teal">{% trans "Persons" %}</a>
+                      <div class="collapsible-body">
+                        <ul>
+                          {% if request.user.is_authenticated %}
+                            <li>
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a href="{% url 'persons:clients'  %}">{% trans "Clients" %}</a>
+                            </li>
+                            <li class="nav-item">
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a href="{% url 'booking:list' %}">{% trans "Agenda" %}</a>
+                            </li>
+                          {% else %}
+                            <li class="nav-item">
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a href="{% url 'booking:list' %}">{% trans "Agenda" %}</a>
+                            </li>
+                            <li class="active">
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a id="log-in-link-3" class="nav-link" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                            </li>
+                          {% endif %}
+                        </ul>
+                      </div>
+                    </li>
                 </ul>
               </ul>
             </div>
@@ -179,6 +206,55 @@
       </script>
 
 
+      <script type="text/javascript">
+
+          cep_value = document.getElementById("id_zipcode");
+
+          logradouro = document.getElementById("id_public_place");
+          bairro = document.getElementById("id_neighborhood");
+          localidade = document.getElementById("id_city");
+          uf = document.getElementById("id_state");
+
+          logradouro.readOnly = true;
+          bairro.readOnly = true;
+          localidade.readOnly = true;
+          uf.readOnly = true;
+
+          cep_value.addEventListener("keyup",function(event){
+
+              if (this.value.length == 8){
+
+                  headers = new Headers();
+                  headers.append("Access-Control-Allow-Origin","*")
+
+                  data = fetch("https://viacep.com.br/ws/"+ this.value +"/json/",headers)
+                     .then(function(response){
+
+                      Promise.resolve(response.json()).then(function(value){
+
+                          logradouro.value = value.logradouro;
+                          bairro.value = value.bairro;
+                          localidade.value = value.localidade;
+                          uf.value = value.uf;
+
+                        // Adiciona a classe 'active' aos campos já preenchidos, isto faz com que o
+                        // 'label' do campo fique 'alto'
+                        document.getElementById("id_neighborhood_container").childNodes[3].className="active";
+                        document.getElementById("id_public_place_container").childNodes[3].className="active";
+                        document.getElementById("id_city_container").childNodes[3].className="active";
+                        document.getElementById("id_state_container").childNodes[3].className="active";
+
+
+
+                      });
+
+                     }).catch(function(error){
+                         console.log(error);
+                     });
+              }
+          });
+
+      </script>
 
         {% if messages %}
             {% for message in messages %}

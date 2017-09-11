@@ -90,7 +90,7 @@ class AddressForm(forms.ModelForm):
     state = forms.CharField(label='Estado')
     zipcode = forms.CharField(label='Cep')
     country = forms.CharField(label='País')
-    phone = forms.CharField(label='Fone')
+    neighborhood = forms.CharField(label='Bairro')
 
     class Meta:
         model = Address
@@ -99,9 +99,10 @@ class AddressForm(forms.ModelForm):
     layout = Layout(
         # Campos do Persons
         Fieldset("Inclua um endereço",
-                 Row('person','phone', 'kynd' ),
-                 Row('public_place','number'),
-                 Row('zipcode', 'city','state',),
+                 Row('person'),
+                 Row('zipcode', 'neighborhood', 'kynd'),
+                 Row(Span8('public_place'),Span4('number')),
+                 Row(Span7('city'),Span5('state'),),
                  Row('country', ),
                  ),
     )

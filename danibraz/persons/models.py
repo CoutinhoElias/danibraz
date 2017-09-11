@@ -50,11 +50,12 @@ class Address(models.Model):
     state = models.CharField('Estado',max_length=150)
     zipcode = models.CharField('Cep',max_length=10)
     country = models.CharField('País',max_length=150)
-    phone = models.CharField('Fone',max_length=50)
+    neighborhood = models.CharField('Bairro',max_length=50)
 
     class Meta:
         verbose_name_plural = 'endereços'
         verbose_name = 'endereço'
+        unique_together = ('person', 'kynd')
 
     def __str__(self):
         return self.public_place
