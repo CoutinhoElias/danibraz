@@ -114,28 +114,24 @@ def clients(request):
 
 def clients_edit(request, person_id):
     pessoa = get_object_or_404(Client, pk=person_id)
-    if 'person_id' in request.session:
-        if request.method == 'POST':
-            form = ClientsForm(request.POST, instance=pessoa)
-            if form.is_valid():
-                print('<<<<==== FORM VALIDO ====>>>>')
-                new = form.save(commit=False)
-                new.save()
-                form.save_m2m()
-                return HttpResponseRedirect('/cadastro/clientes/editar/'+person_id, person_id)
-            else:
-                print('<<<<==== AVISO DE FORMULARIO INVALIDO ====>>>>')
-                print(form)
-                return render(request, 'persons/person.html', {'form':form})
+    if request.method == 'POST':
+        form = ClientsForm(request.POST, instance=pessoa)
+        if form.is_valid():
+            print('<<<<==== FORM VALIDO ====>>>>')
+            new = form.save(commit=False)
+            new.save()
+            form.save_m2m()
+            return HttpResponseRedirect('/cadastro/clientes/editar/'+person_id, person_id)
         else:
-            print('Entrou emm odo de edição do cliente '+person_id)
-
-            request.session['person_id'] = person_id
-            print('A variável person_id da session já possui o valor: '+request.session['person_id'])
-
-            context = {'form': ClientsForm(instance=pessoa)}
-            return render(request, 'persons/person.html', context)
+            print('<<<<==== AVISO DE FORMULARIO INVALIDO ====>>>>')
+            print(form)
+            return render(request, 'persons/person.html', {'form':form})
     else:
+        print('Entrou emm odo de edição do cliente '+person_id)
+
+        request.session['person_id'] = person_id
+        print('A variável person_id da session já possui o valor: '+request.session['person_id'])
+
         context = {'form': ClientsForm(instance=pessoa)}
         return render(request, 'persons/person.html', context)
 
@@ -161,24 +157,28 @@ def employees(request):
 
 
 def address(request):
-    if request.method == 'POST':
-        #request.session['elias'] = 'cabeção'
-        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'+ request.session['person_id'])
+    if 'person_id' in request.session:
 
-        form = AddressForm(request.POST)
+        if request.method == 'POST':
+            #request.session['elias'] = 'cabeção'
+            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'+ request.session['person_id'])
 
-        if form.is_valid():
-            print('<<<<==== FORM VALIDO ====>>>>')
-            new = form.save()
+            form = AddressForm(request.POST)
 
-            return HttpResponseRedirect('/cadastro/clientes/editar/'+request.session["person_id"])
+            if form.is_valid():
+                print('<<<<==== FORM VALIDO ====>>>>')
+                new = form.save()
+
+                return HttpResponseRedirect('/cadastro/clientes/editar/'+request.session["person_id"])
+            else:
+                print('<<<<==== AVISO DE FORMULARIO INVALIDO ====>>>>')
+                print(form)
+                return render(request, 'persons/person_address.html', {'form':form})
         else:
-            print('<<<<==== AVISO DE FORMULARIO INVALIDO ====>>>>')
-            print(form)
-            return render(request, 'persons/person_address.html', {'form':form})
-    else:
-        person_instance = Person.objects.get(pk=request.session["person_id"])
-        initial_data = {"person": person_instance}
-        context = {'form': AddressForm(initial=initial_data)}
+            person_instance = Person.objects.get(pk=request.session["person_id"])
+            initial_data = {"person": person_instance}
+            context = {'form': AddressForm(initial=initial_data)}
 
-        return render(request, 'persons/person_address.html', context)
+            return render(request, 'persons/person_address.html', context)
+    else:
+        return HttpResponseRedirect('/cadastro/clientes/') #fuincionandomaisou menos, verificar o motivo deestarcaindoaqui

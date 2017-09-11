@@ -143,22 +143,22 @@
                     </li>
 
 
-                    <li><a class="collapsible-header  waves-effect waves-teal">{% trans "Persons" %}</a>
+                    <li><a class="collapsible-header  waves-effect waves-teal">{% trans "Pessoas" %}</a>
                       <div class="collapsible-body">
                         <ul>
                           {% if request.user.is_authenticated %}
                             <li>
                               {# URL provided by django-allauth/account/urls.py #}
-                              <a href="{% url 'persons:clients'  %}">{% trans "Clients" %}</a>
+                              <a href="{% url 'persons:clients'  %}">{% trans "Clientes" %}</a>
                             </li>
                             <li class="nav-item">
                               {# URL provided by django-allauth/account/urls.py #}
-                              <a href="{% url 'booking:list' %}">{% trans "Agenda" %}</a>
+                              <a href="{% url 'persons:clients' %}">{% trans "Funcionários" %}</a>
                             </li>
                           {% else %}
                             <li class="nav-item">
                               {# URL provided by django-allauth/account/urls.py #}
-                              <a href="{% url 'booking:list' %}">{% trans "Agenda" %}</a>
+                              <a href="{% url 'persons:clients' %}">{% trans "Clientes" %}</a>
                             </li>
                             <li class="active">
                               {# URL provided by django-allauth/account/urls.py #}
