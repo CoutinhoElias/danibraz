@@ -68,8 +68,13 @@ class Client(Person):
     def save(self, *args, **kwargs):
         super(Client, self).save(*args, **kwargs)
 
+    # def get_absolute_url(self):
+    #     return u'cadastro/clientes/editar/%d' % self.id
+
     def get_absolute_url(self):
-        return u'cadastro/clientes/editar/%d' % self.id
+        from django.urls import reverse
+        return reverse('persons:clients_editar', args=[str(self.id)])
+
 
     class Meta:
         verbose_name = 'Cliente'
