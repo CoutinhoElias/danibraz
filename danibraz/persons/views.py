@@ -101,7 +101,7 @@ def clients(request):
             new = form.save(commit=False)
             new.save()
             form.save_m2m()
-            return object.get_absolute_url()
+            return redirect(new)
             #return HttpResponseRedirect('/reserva/listagem/')
         else:
             print('<<<<==== AVISO DE FORMULARIO INVALIDO ====>>>>')
