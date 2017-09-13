@@ -68,6 +68,9 @@ class Client(Person):
     def save(self, *args, **kwargs):
         super(Client, self).save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return u'cadastro/clientes/editar/%d' % self.id
+
     class Meta:
         verbose_name = 'Cliente'
         verbose_name_plural = 'Clientes'
