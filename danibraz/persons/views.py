@@ -1,6 +1,6 @@
 import extra_views
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect, render_to_response
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template import RequestContext
 from material import *
 # Create your views here.
@@ -90,6 +90,14 @@ class NewCadastroPessoaView1(LayoutMixin,
         return self.object.get_absolute_url()
 
 """--------------------------------------------------------------------------------------------------"""
+
+
+def clients_list(request):
+    context = {
+        'clients_list': Client.objects.all()
+    }
+    return render(request, 'persons/person_list.html', context)
+
 
 def clients(request):
     if request.method == 'POST':
@@ -181,4 +189,4 @@ def address(request):
 
             return render(request, 'persons/person_address.html', context)
     else:
-        return HttpResponseRedirect('/cadastro/clientes/') #fuincionandomaisou menos, verificar o motivo deestarcaindoaqui
+        return HttpResponseRedirect('/cadastro/clientes/listar/') #fuincionandomaisou menos, verificar o motivo deestarcaindoaqui

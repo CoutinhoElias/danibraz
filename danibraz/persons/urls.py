@@ -3,7 +3,7 @@ from django.views.i18n import JavaScriptCatalog
 
 from danibraz.persons import views
 #from danibraz.persons.views import #clients, employees#, NewProfissoesPessoaView
-from danibraz.persons.views import employees, clients, clients_edit, address
+from danibraz.persons.views import employees, clients, clients_edit, address, clients_list
 
 urlpatterns = [
     #url(r'cliente/$', NewProfissoesPessoaView.as_view(), name='clients'),
@@ -15,6 +15,7 @@ urlpatterns = [
     # url(r'clientes/editar/(?P<person_id>\d+)/endereco/$', address, name='address'),
     url(r'clientes/endereco/novo/$', address, name='address'),
 
+    url(r'clientes/listar/$', clients_list, name='clients_list'),
     url(r'clientes/$', clients, name='clients'),
     url(r'clientes/editar/(?P<person_id>\d+)/$', clients_edit, name='clients_editar'),
 

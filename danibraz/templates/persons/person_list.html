@@ -1,0 +1,43 @@
+{% extends "account/base.html" %}
+
+{% load material_form %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Agendamento" %}{% endblock %}
+
+{% block inner %}
+<!--mdl-data-table&#45;&#45;selectable-->
+                <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp mdl-data-table__cell--non-numeric" tastyle="width:100%">
+                    <thead>
+                        <tr>
+                            <th class="mdl-data-table__header--sorted-ascending mdl-data-table__header--sorted-descending">Id</th>
+                            <th class="mdl-data-table__cell--non-numeric">Nome</th>
+                            <th>Aniversário</th>
+                            <th class="mdl-data-table__cell--non-numeric">Endereço</th>
+                            <th>Lim. Compra</th>
+                            <th>Compra Sempre</th>
+                        </tr>
+                    </thead>
+                    {% for client in clients_list %}
+                        <tr>
+                            <td>
+                                <a href="{{ client.get_absolute_url }}">{{ client.id|linebreaks }}</a>
+                            </td>
+                            <td class="mdl-data-table__cell--non-numeric">{{ client.name|linebreaks }}</td>
+                            <td>{{ client.birthday|linebreaks }}</td>
+                            <td class="mdl-data-table__cell--non-numeric">{{ client.address1|linebreaks }}</td>
+                            <td>{{ client.purchase_limit|linebreaks }}</td>
+                            <td>{{ client.compra_sempre|linebreaks }}</td>
+                        </tr>
+                    {% empty %}
+                        <li>
+                            Sem registros
+                        </li>
+                    {% endfor %}
+                </table>
+    </table>
+
+
+{% endblock %}
