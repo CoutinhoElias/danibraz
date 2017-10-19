@@ -49,6 +49,8 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'material',
     'crispy_forms',  # Form layouts
+    'widget_tweaks',
+    'django_filters',
     'rest_framework',
     'allauth',  # registration
     'allauth.account',  # registration
@@ -62,6 +64,7 @@ LOCAL_APPS = [
     'danibraz.bookings.apps.BookingsConfig',
     # Your stuff: custom apps go here
     'danibraz.persons.apps.PersonsConfig',
+    'danibraz.bolsa.apps.BolsaConfig',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

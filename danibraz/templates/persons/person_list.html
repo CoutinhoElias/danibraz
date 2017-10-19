@@ -7,7 +7,30 @@
 
 {% block head_title %}{% trans "Agendamento" %}{% endblock %}
 
+
+
 {% block inner %}
+
+<form method="GET">
+  <div class="row">
+    <form class="col s12">
+      <div class="row">
+        <div class="input-field col s10">
+          <input id="search_box" type="text" class="validate" name="search_box">
+          <label for="search_box">Digite o nome da pessoa desejada:</label>
+        </div>
+
+        <button class="btn waves-effect waves-light" type="submit">Search
+            <i class="material-icons right">search</i>
+        </button>
+      </div>
+    </form>
+  </div>
+</form>
+
+
+
+
 <!--mdl-data-table&#45;&#45;selectable-->
                 <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp mdl-data-table__cell--non-numeric" tastyle="width:100%">
                     <thead>

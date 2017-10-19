@@ -8,6 +8,8 @@ from danibraz.persons.forms import ClientsForm, EmployeeForm, AddressForm
 from danibraz.persons.models import Address, Person, Client
 
 
+from django.db.models import Q
+
 #from danibraz.persons.forms import ClientsForm, EmployeeForm
 
 
@@ -92,11 +94,21 @@ class NewCadastroPessoaView1(LayoutMixin,
 """--------------------------------------------------------------------------------------------------"""
 
 
+# def clients_list(request):
+#     context = {
+#         'clients_list': Client.objects.all()
+#     }
+#     return render(request, 'persons/person_list.html', context)
+
 def clients_list(request):
-    context = {
-        'clients_list': Client.objects.all()
-    }
+    q = request.GET.get('search_box')
+    if q:
+        clients = Client.objects.filter(Q(name__icontains=q))
+    else:
+        clients = Client.objects.all()
+    context = {'clients': clients}
     return render(request, 'persons/person_list.html', context)
+
 
 
 def clients(request):
@@ -139,7 +151,7 @@ def clients_edit(request, person_id):
 
         request.session['person_id'] = person_id
         print('A variável person_id da session já possui o valor: '+request.session['person_id'])
-
+        #return HttpResponseRedirect('/cadastro/clientes/listar/')
         context = {'form': ClientsForm(instance=pessoa)}
         return render(request, 'persons/person.html', context)
 
@@ -189,4 +201,4 @@ def address(request):
 
             return render(request, 'persons/person_address.html', context)
     else:
-        return HttpResponseRedirect('/cadastro/clientes/listar/') #fuincionandomaisou menos, verificar o motivo deestarcaindoaqui
+        return HttpResponseRedirect('/cadastro/clientes/listar/') #fuincionando mais ou menos, verificar o motivo de estar caindoaqui
