@@ -102,11 +102,14 @@ class NewCadastroPessoaView1(LayoutMixin,
 
 def clients_list(request):
     q = request.GET.get('search_box')
+    print(request.GET)
     if q:
-        clients = Client.objects.filter(Q(name__icontains=q))
+        print(q)
+        clients = Client.objects.filter(name__icontains=q)
     else:
         clients = Client.objects.all()
     context = {'clients': clients}
+    print(context)
     return render(request, 'persons/person_list.html', context)
 
 

@@ -11,22 +11,22 @@
 
 {% block inner %}
 
-<form method="GET">
-  <div class="row">
-    <form class="col s12">
-      <div class="row">
-        <div class="input-field col s10">
-          <input id="search_box" type="text" class="validate" name="search_box">
-          <label for="search_box">Digite o nome da pessoa desejada:</label>
-        </div>
+                <form method="GET">
+                  <div class="row">
+                    <form class="col s12">
+                      <div class="row">
+                        <div class="input-field col s10">
+                          <input id="search_box" type="text" class="validate" name="search_box">
+                          <label for="search_box">Digite o nome da pessoa desejada:</label>
+                        </div>
 
-        <button class="btn waves-effect waves-light" type="submit">Search
-            <i class="material-icons right">search</i>
-        </button>
-      </div>
-    </form>
-  </div>
-</form>
+                        <button class="btn waves-effect waves-light" type="submit">Search
+                            <i class="material-icons right">search</i>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </form>
 
 
 
@@ -43,16 +43,21 @@
                             <th>Compra Sempre</th>
                         </tr>
                     </thead>
-                    {% for client in clients_list %}
+                    {% for client in clients %}
                         <tr>
                             <td>
                                 <a href="{{ client.get_absolute_url }}">{{ client.id|linebreaks }}</a>
                             </td>
                             <td class="mdl-data-table__cell--non-numeric">{{ client.name|linebreaks }}</td>
-                            <td>{{ client.birthday|linebreaks }}</td>
+                            <td>{{ client.birthday|date:"d/m/Y" }}</td>
                             <td class="mdl-data-table__cell--non-numeric">{{ client.address1|linebreaks }}</td>
                             <td>{{ client.purchase_limit|linebreaks }}</td>
-                            <td>{{ client.compra_sempre|linebreaks }}</td>
+                            <td>{% if client.compra_sempre %}
+                                    <i class="material-icons">check_circle</i>
+                                {% else %}
+                                    <i class="material-icons">close</i>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% empty %}
                         <li>
