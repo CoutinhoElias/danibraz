@@ -18,17 +18,13 @@ class CustoCorretagemInline(admin.TabularInline):
     extra = 1
 
 class LancamentoModelAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ['custo_total']
     inlines = [
         CustoCblcInline, CustoBovespaInline, CustoCorretagemInline
     ]
 
-    list_display = ('data','papel', 'operacao','quantidade', 'total_cust')
+    list_display = ('data','papel', 'operacao','quantidade', 'custo_total')
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(LancamentoModelAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['total_cust'].initial = CustoCblc.valor_liquido
-        return form
 
 admin.site.register(Lancamento, LancamentoModelAdmin)
 

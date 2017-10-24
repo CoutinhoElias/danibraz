@@ -4,7 +4,7 @@ from django.db import models
 # Agrupar itenspor nota
 # Casas decimaispara o valor= 4  okokokok
 # Lançar os custos em um inline e o sistema aglutinae leva para o movimento. okokokok/2
-
+from django.db.models import Sum
 
 OPERACAO_CHOICES = (
     ('C', 'COMPRA'),
@@ -18,16 +18,12 @@ class Lancamento(models.Model):
     papel = models.CharField('Papel',max_length=100)
     operacao = models.CharField('Operação',max_length=100, choices=OPERACAO_CHOICES)
     quantidade = models.IntegerField('Quantidade')
-    total_cust = models.DecimalField('Custo Total',max_digits=15, decimal_places=4)
+    #total_cust = models.DecimalField('Custo Total',max_digits=15, decimal_places=4)
 
-    def total_cblc(self):
-        aggregate_queryset = self.custo_cblc.aggregate(
-            total=models.Sum(
-                models.F('valor_liquido') + models.F('taxa_liquidacao'), + models.F('taxa_registro'),
-                output_field=models.DecimalField()
-            )
-        )
-        return aggregate_queryset['total']
+    @property
+    def custo_total(self):
+        return self.custo_cblc.all().aggregate(Sum('taxa_registro'))['taxa_registro__sum']
+
 
     class Meta:
         verbose_name_plural = 'lançamentos'
