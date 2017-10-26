@@ -18,12 +18,20 @@ class Lancamento(models.Model):
     papel = models.CharField('Papel',max_length=100)
     operacao = models.CharField('Operação',max_length=100, choices=OPERACAO_CHOICES)
     quantidade = models.IntegerField('Quantidade')
-    #total_cust = models.DecimalField('Custo Total',max_digits=15, decimal_places=4)
 
     @property
     def custo_total(self):
-        return self.custo_cblc.all().aggregate(Sum('taxa_registro'))['taxa_registro__sum']
+        return self.custo_cblc.all().aggregate(Sum('taxa_registro'))['taxa_registro__sum'] #+ self.custo_bovespa.all().aggregate(Sum('emolumentos'))['emolumentos__sum']
 
+    @property
+    def credito(self):
+        return self.custo_cblc.filter(operacao ="C").aggregate(Sum('taxa_registro'))[
+            'taxa_registro__sum']  # + self.custo_bovespa.all().aggregate(Sum('emolumentos'))['emolumentos__sum']
+
+    @property
+    def debito(self):
+        return self.custo_cblc.filter(operacao__in=['D', 'V']).aggregate(Sum('taxa_registro'))[
+            'taxa_registro__sum']
 
     class Meta:
         verbose_name_plural = 'lançamentos'
@@ -38,6 +46,7 @@ class CustoCblc(models.Model):
     valor_liquido = models.DecimalField('Valor líquido das operações', max_digits=15, decimal_places=4)
     taxa_liquidacao = models.DecimalField('Taxa de liquidação', max_digits=15, decimal_places=4)
     taxa_registro = models.DecimalField('Taxa de registro', max_digits=15, decimal_places=4)
+    operacao = models.CharField('Operação', max_length=100, choices=OPERACAO_CHOICES)
 
 
     class Meta:

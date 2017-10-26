@@ -18,7 +18,8 @@ class CustoCorretagemInline(admin.TabularInline):
     extra = 1
 
 class LancamentoModelAdmin(admin.ModelAdmin):
-    readonly_fields = ['custo_total']
+    readonly_fields = ['custo_total', 'credito', 'debito']
+
     inlines = [
         CustoCblcInline, CustoBovespaInline, CustoCorretagemInline
     ]
