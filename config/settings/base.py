@@ -65,6 +65,7 @@ LOCAL_APPS = [
     # Your stuff: custom apps go here
     'danibraz.persons.apps.PersonsConfig',
     'danibraz.bolsa.apps.BolsaConfig',
+    'danibraz.checkout.apps.CheckoutConfig',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Seu time</title>
+</head>
+
+<body>
+
+<h1>Escolha seu time</h1>
+
+<p><a href="new">Novo</a></p>
+
+<table border="1px">
+  <thead>
+    <tr><th>Editar</th><th>Coluna2</th><th>Coluna3</th></tr>
+  </thead>
+
+  <tbody>
+    {% for team in teams %}
+    <tr>
+      <td><a href="edit/{{ team.id }}">編集</a></td>
+      <td>{{ team.name }}</td>
+      <td><a href="delete/{{ team.id }}">削除</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+</body>
+</html>

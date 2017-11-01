@@ -1,0 +1,52 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Novo time</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="{% static 'js/addform.js' %}"></script>
+</head>
+
+<body>
+
+<h1>Novo time</h1>
+
+<form method="POST">{% csrf_token %}
+  {{ form.as_p }}
+
+  <table border="1px" id="id_lancamentos_table">
+    {{ formset.management_form }}
+
+    <thead>
+      <tr><th>Posição</th><th>Jogador</th><th>Sei não</th></tr>
+    </thead>
+
+    <tbody>
+      {% for lancamentoItem_form in forms %}
+      <tr {% if forloop.first %} style="display:none;" {% endif %}>
+      <td>
+          {% for hidden in lancamentoItem_form.hidden_fields %}
+            {{ hidden }}
+          {% endfor %}
+
+        </td>
+        <td>{{ lancamentoItem_form.symbol.errors }} {{ lancamentoItem_form.symbol }}</td>
+        <td>{{ lancamentoItem_form.quantity.errors }} {{ lancamentoItem_form.quantity }}</td>
+        <td>{{ lancamentoItem_form.price.errors }} {{ lancamentoItem_form.price }}</td>
+        <td align="center">{{ lancamentoItem_form.DELETE }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p>
+    <button type="button" onclick="addNewForm('#id_lancamentos_table tbody', '{{ formset.prefix }}')">Mais um</button>
+  </p>
+
+  <input type="submit" value="Submit" />
+</form>
+
+</body>
+</html>

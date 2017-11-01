@@ -19,6 +19,7 @@ urlpatterns = [
     # Your stuff: custom urls includes go here
     url(r'^cadastro/', include('danibraz.persons.urls', namespace='persons')),
     url(r'^reserva/', include('danibraz.bookings.urls', namespace='booking')),
+    url(r'^lancamento/', include('danibraz.checkout.urls', namespace='lancamento')),
     url(r'^api/bookings/', include('danibraz.bookings.api.urls', namespace='booking-api')),
 
 
