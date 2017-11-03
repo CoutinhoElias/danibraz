@@ -16,7 +16,7 @@
         {% endform %}
 
 
-        <table>
+        <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp mdl-data-table__cell--non-numeric" tastyle="width:100%">
             <thead>
                 <tr>
                     <th class="mdl-data-table__header--sorted-ascending mdl-data-table__header--sorted-descending">Id</th>
@@ -35,7 +35,7 @@
                     <td class="mdl-data-table__cell--non-numeric">{{ lancamentoItem_form.symbol.errors }} {{ lancamentoItem_form.symbol }}</td>
                     <td>{{ lancamentoItem_form.quantity.errors }} {{ lancamentoItem_form.quantity }}</td>
                     <td class="mdl-data-table__cell--non-numeric">{{ lancamentoItem_form.price.errors }} {{ lancamentoItem_form.price }}</td>
-
+                    <td>{{ lancamentoItem_form.DELETE }}</td>
                 </tr>
             {% empty %}
                 <li>
