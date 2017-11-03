@@ -1,53 +1,45 @@
 {% extends "account/base.html" %}
-
 {% load material_form %}
-
 {% load i18n %}
-
 {% block head_title %}{% trans "Agendamento" %}{% endblock %}
-
 {% block inner %}
 
-    <form method="POST">
-        {% csrf_token %}
-        <!--{% form form=form %}{% endform %}-->
+<form method="POST">
+    {% csrf_token %}            <!--{% form form=form %}{% endform %}-->
         {% form form=form layout=view.layout %}
             {% part form.data prefix %}<i class="material-icons prefix">perm_contact_calendar</i>{% endpart %}
         {% endform %}
 
+  <table id="id_lancamentos_table" class="striped bordered">
+    {{ formset.management_form }}
+        <thead>
+            <tr>
+                <th>Papel</th>
+                <th>Quantidade</th>
+                <th>Preço</th>
+            </tr>
+        </thead>
 
-        <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp mdl-data-table__cell--non-numeric" tastyle="width:100%">
-            <thead>
-                <tr>
-                    <th class="mdl-data-table__header--sorted-ascending mdl-data-table__header--sorted-descending">Id</th>
-                    <th class="mdl-data-table__cell--non-numeric">Papel</th>
-                    <th>Quantidade</th>
-                    <th>Preço</th>
-                    <th>Sei não</th>
-                </tr>
-            </thead>
+        <tbody>
+                {% for lancamentoItem_form in forms %}
 
-            {% for lancamentoItem_form in forms %}
-                <tr>
-                    <td>
-                        <a href="{{ client.get_absolute_url }}">{{ client.id|linebreaks }}</a>
-                    </td>
-                    <td class="mdl-data-table__cell--non-numeric">{{ lancamentoItem_form.symbol.errors }} {{ lancamentoItem_form.symbol }}</td>
-                    <td>{{ lancamentoItem_form.quantity.errors }} {{ lancamentoItem_form.quantity }}</td>
-                    <td class="mdl-data-table__cell--non-numeric">{{ lancamentoItem_form.price.errors }} {{ lancamentoItem_form.price }}</td>
-                    <td>{{ lancamentoItem_form.DELETE }}</td>
-                </tr>
-            {% empty %}
-                <li>
-                    Sem registros
-                </li>
-            {% endfor %}
-        </table>
-        <p>
-        <button type="button" onclick="addNewForm('#table tbody', '{{ formset.prefix }}')">Mais um</button>
-        </p>
-        <button type="submit" name="_submit" class="btn">Endereços</button>
-    </form>
+                    <tr>
+                        <td>{{ lancamentoItem_form.symbol.errors }} {{ lancamentoItem_form.symbol }}</td>
+                        <td>{{ lancamentoItem_form.quantity.errors }} {{ lancamentoItem_form.quantity }}</td>
+                        <td>{{ lancamentoItem_form.price.errors }} {{ lancamentoItem_form.price }}</td>
+                    </tr>
+                {% empty %}
+                    <li>
+                        Sem registros
+                    </li>
+                {% endfor %}
+        </tbody>
+    </table>
+
+    <button type="button" onclick="addNewForm('#id_lancamentos_table tbody', '{{ formset.prefix }}')">Mais um</button>
+
+    <button type="submit" name="_submit" class="btn">Endereços</button>
+</form>
 
 
 {% endblock %}

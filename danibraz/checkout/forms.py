@@ -10,5 +10,6 @@ class LancamentoForm(forms.models.ModelForm):
         model = Lancamento
         fields = '__all__'
 
+
 LancamentoItemFormSet = inlineformset_factory(Lancamento, LancamentoItem, can_delete=True,
         fields=('symbol', 'quantity','price'), extra=1)

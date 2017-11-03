@@ -23,4 +23,4 @@ def lancamentos_create(request):
 
     forms = [formset.empty_form] + formset.forms
     context = {'form': form, 'formset': formset, 'forms': forms}
-    return render(request, 'checkout/lancamentos_edit_material.html', context)
+    return render(request, 'checkout/lancamentos_edit_material_2.html', context)
