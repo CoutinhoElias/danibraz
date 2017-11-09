@@ -1,0 +1,56 @@
+{% extends "account/base.html" %}
+{% load staticfiles i18n compress%}
+{% load material_form %}
+{% load i18n %}
+
+{% block inner %}
+  <div class="col-md-12">
+
+  </div>
+  <br>
+  <div class="col-lg-12">
+    <h2>New Invoice</h2>
+    <br>
+
+
+    <form method="post" role="form" autocomplete="off" enctype="multipart/form-data">{% csrf_token %}
+
+      <fieldset>
+        {% form form=form layout=view.layout %}
+        {% endform %}
+      </fieldset>
+      <fieldset>
+        <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp mdl-data-table__cell--non-numeric">
+          <thead class="#cfd8dc blue-grey lighten-4">
+          <th>Title</th>
+          <th>Quantity</th>
+          <th>Unit price</th>
+          <th>Del</th>
+          </thead>
+          {{ formset.management_form }}
+          <tbody>
+          {% for item_form in formset.forms %}
+            <tr>
+
+              <td>{{ item_form.title.errors }} {{ item_form.title }}</td>
+              <td>{{ item_form.quantity.errors }} {{ item_form.quantity }}</td>
+              <td>{{ item_form.unit_price.errors }} {{ item_form.unit_price }}</td>
+              <td class=""></td>
+
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </fieldset>
+      <br><br>
+
+        <button type="submit" class="btn btn-primary pull-right">Create invoice</button>
+
+    </form>
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script src="{% static 'js/jquery.formset.min.js' %}"></script>
+  <script src="{% static 'js/invoice_form.js' %}"></script>
+{% endblock %}

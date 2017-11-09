@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 # Create your models here.
 OPERACAO_CHOICES = (
@@ -76,6 +77,10 @@ class Lancamento(models.Model):
     def __str__(self):
         return str(self.data)
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('checkout:lancamento_editar', args=[str(self.id)])
+
 
 class LancamentoItem(models.Model):
     lancamento = models.ForeignKey('checkout.Lancamento', related_name='lancamento_item')
@@ -89,3 +94,27 @@ class LancamentoItem(models.Model):
 
     def __str__(self):
         return '{} [{}]'.format(self.lancamento, self.quantity)
+
+
+#----------------------------------------------------------------------------------
+
+
+class Invoice(models.Model):
+    customer = models.ForeignKey('persons.Client')
+    total = models.IntegerField('Total')
+
+    created = models.DateTimeField('created', auto_now_add=True)
+    modified = models.DateTimeField('modified', auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse('checkout:invoice_detail', args=(self.pk,))
+
+
+class Item(models.Model):
+    invoice = models.ForeignKey(Invoice)
+    title = models.CharField('title', max_length=255)
+    quantity = models.DecimalField('quantity', max_digits=10, decimal_places=3, default=1)
+    unit_price = models.DecimalField('unit price', max_digits=10, decimal_places=2)
+
+    created = models.DateTimeField('created', auto_now_add=True)
+    modified = models.DateTimeField('modified', auto_now=True)

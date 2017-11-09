@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from danibraz.checkout.models import Lancamento, LancamentoItem
+from danibraz.checkout.models import Lancamento, LancamentoItem, Item, Invoice
 
 
 class LancamentoItemInline(admin.TabularInline):
@@ -15,3 +15,17 @@ class LancamentoModelAdmin(admin.ModelAdmin):
 
 admin.site.register(LancamentoItem)
 admin.site.register(Lancamento, LancamentoModelAdmin)
+
+
+
+class ItemInline(admin.TabularInline):
+    model = Item
+    extra = 1
+
+class InvoiceModelAdmin(admin.ModelAdmin):
+    inlines = [ItemInline]
+
+
+
+admin.site.register(Item)
+admin.site.register(Invoice, InvoiceModelAdmin)
