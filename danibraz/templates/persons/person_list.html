@@ -51,7 +51,7 @@
                             <td class="mdl-data-table__cell--non-numeric">{{ client.name|linebreaks }}</td>
                             <td>{{ client.birthday|date:"d/m/Y" }}</td>
                             <td class="mdl-data-table__cell--non-numeric">{{ client.address1|linebreaks }}</td>
-                            <td>{{ client.purchase_limit|linebreaks }}</td>
+                            <td>{{ client.purchase_limit|floatformat:"2" }}</td>
                             <td>{% if client.compra_sempre %}
                                     <i class="material-icons">check_circle</i>
                                 {% else %}

@@ -1,9 +1,12 @@
 from django import forms
+from material import *
 from django.forms import inlineformset_factory
 
+
 from danibraz.checkout.models import Lancamento, LancamentoItem, Invoice, Item
+from danibraz.persons.models import Client
 
-
+#sirleymacal@gmail.com
 class LancamentoForm(forms.models.ModelForm):
 
     class Meta:
@@ -20,9 +23,18 @@ from django.forms import formset_factory, modelformset_factory
 
 
 class InvoiceForm(forms.ModelForm):
+    customer = forms.ModelChoiceField(label='Pessoa', required=True, queryset=Client.objects.all())
+    emissao = forms.DateField(label='Emissão', required=False,
+                              widget=forms.TextInput(attrs={'class':'datepicker picker__input picker__input--active'}))
     class Meta:
         model = Invoice
+        #fields = '__all__'
         exclude = ['total', 'created', 'modified']
+
+    layout = Layout(
+        # Campos do Persons
+        Row(Span3('emissao'), Span9('customer'), ),
+    )
 
 
 class ItemForm(forms.ModelForm):

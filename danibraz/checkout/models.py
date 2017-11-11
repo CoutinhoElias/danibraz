@@ -101,8 +101,8 @@ class LancamentoItem(models.Model):
 
 class Invoice(models.Model):
     customer = models.ForeignKey('persons.Client')
+    emissao = models.DateField('emissao')
     total = models.IntegerField('Total')
-
     created = models.DateTimeField('created', auto_now_add=True)
     modified = models.DateTimeField('modified', auto_now=True)
 
