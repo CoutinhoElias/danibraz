@@ -26,6 +26,7 @@ class InvoiceForm(forms.ModelForm):
     customer = forms.ModelChoiceField(label='Pessoa', required=True, queryset=Client.objects.all())
     emissao = forms.DateField(label='Emissão', required=False,
                               widget=forms.TextInput(attrs={'class':'datepicker picker__input picker__input--active'}))
+
     class Meta:
         model = Invoice
         #fields = '__all__'

@@ -1,7 +1,10 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.core.signals import request_finished
 
 # Create your models here.
+from django.db.models import Sum
+
 OPERACAO_CHOICES = (
     ('C', 'COMPRA'),
     ('V', 'VENDA'),
@@ -109,9 +112,14 @@ class Invoice(models.Model):
     def get_absolute_url(self):
         return reverse('checkout:invoice_detail', args=(self.pk,))
 
+    @property
+    def total_prop(self):
+        return self.nota.all().aggregate(Sum('unit_price'))['unit_price__sum'] #+ self.custo_bovespa.all().aggregate(Sum('emolumentos'))['emolumentos__sum']
+
+
 
 class Item(models.Model):
-    invoice = models.ForeignKey(Invoice)
+    invoice = models.ForeignKey(Invoice, related_name='nota')
     title = models.CharField('title', max_length=255)
     quantity = models.DecimalField('quantity', max_digits=10, decimal_places=3, default=1)
     unit_price = models.DecimalField('unit price', max_digits=10, decimal_places=2)
