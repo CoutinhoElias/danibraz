@@ -1,16 +1,42 @@
-{% extends 'base.html' %}
-{% load staticfiles %}
-{% load bootstrap3 %}
-{% load render_table from django_tables2 %}
+{% extends "account/base.html" %}
+{% load material_form %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block head_title %}{% trans "Agendamento" %}{% endblock %}
 
-{% block content %}
-  <div class="col-md-12">
-    <p>
-      <a href="{% url 'invoicing:invoice_add' %}" class="btn btn-primary">New invoice</a>
-    </p>
-  </div>
-  <br>
-  <div class="col-md-12">
-    {% render_table table %}
-  </div>
+{% block inner %}
+                <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp mdl-data-table__cell--non-numeric" tastyle="width:100%">
+                    <thead>
+                        <tr>
+                            <th class="mdl-data-table__header--sorted-ascending mdl-data-table__header--sorted-descending">Id</th>
+                            <th class="mdl-data-table__cell--non-numeric">Cliente</th>
+                            <th>Dt. Emissão</th>
+                            <th>Total View</th>
+                            <th>Total @property</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    {% for invoice in invoices %}
+                        <tr>
+                            <td>
+                                <a href="{{ invoice.get_absolute_url }}">{{ invoice.id|linebreaks }}</a>
+                            </td>
+                            <td class="mdl-data-table__cell--non-numeric">{{ invoice.customer|linebreaks }}</td>
+                            <td>{{ invoice.emissao|date:"d/m/Y" }}</td>
+                            <td>{{ invoice.total|floatformat:"2" }}</td>
+                            <td>{{ invoice.total_prop|floatformat:"2" }}</td>
+                            <td>{% if invoice.compra_sempre %}
+                                    <i class="material-icons">check_circle</i>
+                                {% else %}
+                                    <i class="material-icons">close</i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <li>
+                            Sem registros
+                        </li>
+                    {% endfor %}
+                </table>
+
 {% endblock %}

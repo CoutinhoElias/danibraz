@@ -16,22 +16,6 @@ class Person(models.Model):
     def __str__(self):
         return self.name
 
-    # def get_child(self):
-    #     if hasattr(self, 'client'):
-    #         return self.client
-    #     elif hasattr(self, 'employee'):
-    #         return self.employee
-    #     else:
-    #         return None
-    #
-    # def get_type(self):
-    #     if hasattr(self, 'client'):
-    #         return 'client'
-    #     elif hasattr(self, 'employee'):
-    #         return 'employee'
-    #     else:
-    #         return None
-
     def get_absolute_url(self):
         return u'/cadastro/pessoas'
 
@@ -74,6 +58,7 @@ class Client(Person):
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('persons:clients_editar', args=[str(self.id)])
+
 
 
     class Meta:

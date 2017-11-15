@@ -110,7 +110,10 @@ class Invoice(models.Model):
     modified = models.DateTimeField('modified', auto_now=True)
 
     def get_absolute_url(self):
-        return reverse('checkout:invoice_detail', args=(self.pk,))
+        return reverse('checkout:invoice_edit', args=(self.pk,))
+
+    # def get_absolute_url(self):
+    #     return reverse('persons:clients_editar', args=[str(self.id)])
 
     @property
     def total_prop(self):

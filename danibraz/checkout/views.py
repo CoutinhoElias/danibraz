@@ -5,9 +5,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, FormView
+from django.views.generic import ListView, CreateView, FormView, UpdateView
 
-from danibraz.checkout.forms import LancamentoForm, LancamentoItemFormSet, InvoiceForm, ItemInvoiceFormSet
+from danibraz.checkout.forms import LancamentoForm, LancamentoItemFormSet, InvoiceForm, ItemInvoiceFormSet, \
+    ItemInvoiceUpdateFormSet
+from danibraz.checkout.models import Invoice
 
 
 def lancamentos_create2(request):
@@ -118,3 +120,69 @@ class InvoiceFormView(SuccessMessageMixin, FormView):
             return super(InvoiceFormView, self).form_valid(form)
         else:
             return self.render_to_response(self.get_context_data(form=form))
+
+
+def invoices_edit(request, invoice_id):
+    invoice = get_object_or_404(Invoice, pk=invoice_id)
+    if request.method == 'POST':
+        form = InvoiceForm(request.POST)
+        if form.is_valid():
+            print('<<<<==== FORM VALIDO ====>>>>')
+            new = form.save(commit=False)
+            new.save()
+            form.save_m2m()
+            return HttpResponseRedirect('/lancamento/pedido/editar/'+invoice_id, invoice_id)
+        else:
+            print('<<<<==== AVISO DE FORMULARIO INVALIDO ====>>>>')
+            print(form)
+            return render(request, 'checkout/invoice_form.html', {'form':form})
+    else:
+        context = {'form': InvoiceForm(instance=invoice)}
+        return render(request, 'checkout/invoice_form.html', context)
+
+
+class InvoiceUpdateView(SuccessMessageMixin, UpdateView):
+    model = Invoice
+    form_class = InvoiceForm
+    template_name = 'invoice_edit.html'
+    success_url = reverse_lazy('checkout:invoice_list')
+    success_message = 'The invoice was edited correctly.'
+
+    def get_context_data(self, **kwargs):
+        context = super(InvoiceUpdateView, self).get_context_data(**kwargs)
+        invoice = self.get_object()
+        productos = invoice.item_set.all()
+        if self.request.POST:
+            context['formset'] = ItemInvoiceUpdateFormSet(self.request.POST, self.request.FILES, prefix='items')
+        else:
+            context['formset'] = ItemInvoiceUpdateFormSet(queryset=productos, prefix='items')
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        total = 0
+        if formset.is_valid():
+            invoice = form.save(commit=False)
+            for item_form in formset.forms:
+                item = item_form.save(commit=False)
+                item.invoice = self.get_object()
+                item.save()
+                total += item.quantity * item.unit_price
+            formset.save()
+            invoice.total = total
+            invoice.save()
+            return super(InvoiceUpdateView, self).form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
+# class InvoiceSingleTableView():
+#     #table_class = InvoiceTable.....
+#     queryset = Invoice.objects.all()
+#     template_name = 'invoice_list.html'
+
+def invoice_list(request):
+    invoices = Invoice.objects.all()
+    context = {'invoices': invoices}
+    print(context)
+    return render(request, 'checkout/invoice_list.html', context)
