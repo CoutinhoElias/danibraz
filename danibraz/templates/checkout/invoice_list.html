@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+{% load render_table from django_tables2 %}
+
+{% block content %}
+  <div class="col-md-12">
+    <p>
+      <a href="{% url 'invoicing:invoice_add' %}" class="btn btn-primary">New invoice</a>
+    </p>
+  </div>
+  <br>
+  <div class="col-md-12">
+    {% render_table table %}
+  </div>
+{% endblock %}
