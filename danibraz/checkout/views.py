@@ -167,3 +167,25 @@ def invoice_list(request):
     context = {'invoices': invoices}
     print(context)
     return render(request, 'checkout/invoice_list.html', context)
+
+
+# def InvoiceUpdateView(request, invoice_id):
+#     invoice_id = get_object_or_404(Invoice, pk=invoice_id)
+#     if request.method == 'POST':
+#         form = InvoiceForm(request.POST, invoice_id)
+#         formset = ItemInvoiceUpdateFormSet(request.POST)
+#
+#         if form.is_valid() and formset.is_valid():
+#             with transaction.atomic():
+#                 item = form.save()
+#                 formset.instance = item
+#                 formset.save()
+#
+#             return redirect('/teams/')
+#     else:
+#         form = InvoiceForm()
+#         formset = ItemInvoiceUpdateFormSet()
+#
+#     forms = [formset.empty_form] + formset.forms
+#     context = {'form': form, 'formset': formset, 'forms': forms}
+#     return render(request, 'checkout/invoice_form.html', context)

@@ -10,6 +10,7 @@ urlpatterns = [
     # url(r'pedidos/listar/$', lancamentos, name='lancamento_list'),
     # url(r'pedido/novo/$', lancamentos, name='lancamento'),
     url(r'^pedido/novo/$', InvoiceFormView.as_view(), name='invoice_add'),
+    # url(r'pedido/editar/(?P<invoice_id>\d+)/$', InvoiceUpdateView, name='invoice_edit'),
     url(r'^pedido/editar/(?P<pk>\d+)/$$', InvoiceUpdateView.as_view(), name='invoice_edit'),
     #url(r'^pedido/editar/(?P<invoice_id>\d+)/$', invoices_edit, name='invoice_edit'),
     #url(r'^pedido/listar/$', InvoiceSingleTableView.as_view(), name='invoice_list'),
