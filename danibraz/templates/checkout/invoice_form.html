@@ -1,4 +1,5 @@
 {% extends "account/base.html" %}
+{% load widget_tweaks %}
 {% load staticfiles i18n compress%}
 {% load material_form %}
 {% load i18n %}
@@ -31,11 +32,11 @@
           {{ formset.management_form }}
           <tbody>
           {% for item_form in formset.forms %}
-            <tr>
+            <tr class="item-form">
 
               <td>{{ item_form.title.errors }} {{ item_form.title }}</td>
-              <td>{{ item_form.quantity.errors }} {{ item_form.quantity }}</td>
-              <td>{{ item_form.unit_price.errors }} {{ item_form.unit_price }}</td>
+              <td>{{ item_form.quantity.errors }} {% render_field item_form.quantity class+="qtd" %}</td>
+              <td>{{ item_form.unit_price.errors }} {% render_field item_form.unit_price class+="vl" %}</td>
               <td class=""></td>
 
             </tr>
@@ -75,6 +76,12 @@
         clear: 'Limpar',
         close: 'Ok',
         closeOnSelect: false // Close upon selecting a date,
+      });
+
+
+      $(".qtd,.vl").on("change", function(evt) {
+            console.log("Change Invocado");
+            calcularTotal();
       });
     });
   </script>

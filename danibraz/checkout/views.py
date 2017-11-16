@@ -122,36 +122,17 @@ class InvoiceFormView(SuccessMessageMixin, FormView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
-def invoices_edit(request, invoice_id):
-    invoice = get_object_or_404(Invoice, pk=invoice_id)
-    if request.method == 'POST':
-        form = InvoiceForm(request.POST)
-        if form.is_valid():
-            print('<<<<==== FORM VALIDO ====>>>>')
-            new = form.save(commit=False)
-            new.save()
-            form.save_m2m()
-            return HttpResponseRedirect('/lancamento/pedido/editar/'+invoice_id, invoice_id)
-        else:
-            print('<<<<==== AVISO DE FORMULARIO INVALIDO ====>>>>')
-            print(form)
-            return render(request, 'checkout/invoice_form.html', {'form':form})
-    else:
-        context = {'form': InvoiceForm(instance=invoice)}
-        return render(request, 'checkout/invoice_form.html', context)
-
-
 class InvoiceUpdateView(SuccessMessageMixin, UpdateView):
     model = Invoice
     form_class = InvoiceForm
-    template_name = 'invoice_edit.html'
+    template_name = 'checkout/invoice_form.html'
     success_url = reverse_lazy('checkout:invoice_list')
     success_message = 'The invoice was edited correctly.'
 
     def get_context_data(self, **kwargs):
         context = super(InvoiceUpdateView, self).get_context_data(**kwargs)
         invoice = self.get_object()
-        productos = invoice.item_set.all()
+        productos = invoice.nota.all()
         if self.request.POST:
             context['formset'] = ItemInvoiceUpdateFormSet(self.request.POST, self.request.FILES, prefix='items')
         else:

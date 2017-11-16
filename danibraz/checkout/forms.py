@@ -27,8 +27,9 @@ class InvoiceForm(forms.ModelForm):
     emissao = forms.DateField(label='Emissão', required=False,
                               widget=forms.TextInput(attrs={'class':'datepicker picker__input picker__input--active'}))
     #Campocalculado
-    total_prop = forms.DecimalField(widget=forms.TextInput(
-        attrs={'class': 'form-control decimal-mask', 'readonly': True}), label='Total s/ imposto (R$)', required=False)
+    # total_prop = forms.DecimalField(widget=forms.TextInput(
+    #     attrs={'class': 'form-control decimal-mask', 'readonly': True}), label='Total s/ imposto (R$)', required=False)
+    total_prop = forms.DecimalField(label='Total s/ imposto (R$)', widget = forms.TextInput(attrs={'readonly':'readonly'}))
 
     def __init__(self, *args, **kwargs):
         super(InvoiceForm, self).__init__(*args, **kwargs)
