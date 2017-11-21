@@ -100,6 +100,18 @@ class LancamentoItem(models.Model):
 
 
 #----------------------------------------------------------------------------------
+class Papel(models.Model):
+    symbol = models.CharField('Papel', max_length=100, choices=PAPEL_CHOICES)
+    stock = models.PositiveSmallIntegerField('Estoque')
+    created = models.DateTimeField('created', auto_now_add=True)
+    modified = models.DateTimeField('modified', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Papel'
+        verbose_name_plural = 'Papeis'
+
+    def __str__(self):
+        return self.symbol
 
 
 class Invoice(models.Model):
@@ -123,9 +135,23 @@ class Invoice(models.Model):
 
 class Item(models.Model):
     invoice = models.ForeignKey(Invoice, related_name='nota')
-    title = models.CharField('title', max_length=255)
+    title = models.ForeignKey('checkout.Papel')
     quantity = models.DecimalField('quantity', max_digits=10, decimal_places=3, default=1)
     unit_price = models.DecimalField('unit price', max_digits=10, decimal_places=2)
-
     created = models.DateTimeField('created', auto_now_add=True)
     modified = models.DateTimeField('modified', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Item da Nota'
+        verbose_name_plural = 'Itens da Nota'
+        #unique_together = (('invoice', 'title'),)
+
+def post_save_item(sender, instance, **kwargs):
+    #if instance.quantity >= 1:
+        instance.title.stock -= instance.quantity
+        instance.title.save()
+
+
+models.signals.post_save.connect(
+    post_save_item, sender=Item, dispatch_uid='post_save_item'
+)
