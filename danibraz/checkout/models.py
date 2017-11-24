@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.core.signals import request_finished
@@ -147,9 +148,13 @@ class Item(models.Model):
         #unique_together = (('invoice', 'title'),)
 
 def post_save_item(sender, instance, **kwargs):
-    #if instance.quantity >= 1:
+    if instance.title.stock >= instance.quantity:
         instance.title.stock -= instance.quantity
         instance.title.save()
+    else:
+        # instance.title.stock = 0
+        # instance.title.save()
+        raise ValidationError('O valor do estoque ficará negativo, Não foi salvo')
 
 
 models.signals.post_save.connect(

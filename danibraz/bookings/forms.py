@@ -6,12 +6,8 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from material import Fieldset
 from material import Layout
 from material import Row
-from material import Span10
-from material import Span3
-from material import Span5
 from material import Span6
-from material import Span8
-from material import Span4
+
 
 from danibraz.bookings.models import Booking
 
@@ -48,27 +44,3 @@ class BookingsForm(forms.ModelForm):
                  Row('participants')
                  )
     )
-
-
-# class LoginForm(forms.Form):
-#     username = forms.CharField(max_length=30, label="Nome")
-#     # email = forms.EmailField()
-#     password = forms.CharField(widget=forms.PasswordInput)
-#     # keep_logged = forms.BooleanField(required=False, label="Keep me logged in")
-
-
-
-# input_formats = ['%Y-%m-%d %H:%M:%S',    # '2006-10-25 14:30:59'
-#  '%Y-%m-%d %H:%M',       # '2006-10-25 14:30'
-#  '%Y-%m-%d',             # '2006-10-25'
-#  '%m/%d/%Y %H:%M:%S',    # '10/25/2006 14:30:59'
-#  '%m/%d/%Y %H:%M',       # '10/25/2006 14:30'
-#  '%m/%d/%Y',             # '10/25/2006'
-#  '%m/%d/%y %H:%M:%S',    # '10/25/06 14:30:59'
-#  '%m/%d/%y %H:%M',       # '10/25/06 14:30'
-#  '%m/%d/%y']             # '10/25/06'
-
-#COR DO BOTAO INLINE
-# .grey.lighten-4 {
-#     background-color: #786ec7 !important;
-# }
