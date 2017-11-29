@@ -90,8 +90,7 @@ class InvoiceFormView(SuccessMessageMixin, FormView):
     form_class = InvoiceForm
     template_name = 'checkout/invoice_form.html'
     success_url = reverse_lazy('checkout:invoice_add')
-    #success_url = reverse_lazy('invoicing:invoice_list')
-    success_message = 'The invoice was created correctly.'
+    success_message = 'A nota foi criada corretamente.'
 
     def get_context_data(self, **kwargs):
         context = super(InvoiceFormView, self).get_context_data(**kwargs)
@@ -101,24 +100,32 @@ class InvoiceFormView(SuccessMessageMixin, FormView):
             context['formset'] = ItemInvoiceFormSet(prefix='items')
         return context
 
-    # Linha 38, ocampo invoice.total receberá oitem.quantity * item.unit_pryce
+
     def form_valid(self, form):
         context = self.get_context_data()
         formset = context['formset']
         total = 0
+        valid = True
         if formset.is_valid():
             invoice = form.save(commit=False)
             invoice.total = 0
             invoice.save()
             for item_form in formset.forms:
-                item = item_form.save(commit=False)
-                item.invoice = invoice
-                item.save()
-                total += item.quantity * item.unit_price
-            invoice.total = total
-            invoice.save()
-            return super(InvoiceFormView, self).form_valid(form)
+                if item_form.is_valid():
+                    item = item_form.save(commit=False)
+                    item.invoice = invoice
+                    item.save()
+                    total += item.quantity * item.unit_price
+                    invoice.total = total
+                    invoice.save()
+                else:
+                    valid = False
+            if valid:
+                return super(InvoiceFormView, self).form_valid(form)
+            else:
+                return self.render_to_response(self.get_context_data(form=form))
         else:
+            print('O form não é valido!')
             return self.render_to_response(self.get_context_data(form=form))
 
 

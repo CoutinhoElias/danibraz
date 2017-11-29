@@ -1,10 +1,11 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.core.signals import request_finished
 
 # Create your models here.
 from django.db.models import Sum
+
+from danibraz.checkout.validate_error_invoice import validate_quantity
 
 OPERACAO_CHOICES = (
     ('C', 'COMPRA'),
@@ -134,10 +135,11 @@ class Invoice(models.Model):
 
 
 
+
 class Item(models.Model):
     invoice = models.ForeignKey(Invoice, related_name='nota')
     title = models.ForeignKey('checkout.Papel')
-    quantity = models.DecimalField('quantity', max_digits=10, decimal_places=3, default=1)
+    quantity = models.PositiveSmallIntegerField('quantity', validators=[validate_quantity])
     unit_price = models.DecimalField('unit price', max_digits=10, decimal_places=2)
     created = models.DateTimeField('created', auto_now_add=True)
     modified = models.DateTimeField('modified', auto_now=True)
@@ -154,7 +156,8 @@ def post_save_item(sender, instance, **kwargs):
     else:
         # instance.title.stock = 0
         # instance.title.save()
-        raise ValidationError('O valor do estoque ficará negativo, Não foi salvo')
+        #raise ValidationError('O valor do estoque ficará negativo, Não foi salvo')
+        errors_message = 'A nota não foi salva.'
 
 
 models.signals.post_save.connect(

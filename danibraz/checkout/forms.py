@@ -1,9 +1,10 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from material import *
 from django.forms import inlineformset_factory
 
 
-from danibraz.checkout.models import Lancamento, LancamentoItem, Invoice, Item
+from danibraz.checkout.models import Lancamento, LancamentoItem, Invoice, Item, Papel
 from danibraz.persons.models import Client
 
 #sirleymacal@gmail.com
@@ -48,16 +49,25 @@ class InvoiceForm(forms.ModelForm):
     )
 
 
+def validate_negative(value):
+    if value == 3:
+        raise ValidationError('Quantidade não pode ser maior que o estoque')
+
+
 class ItemForm(forms.ModelForm):
+    title = forms.ModelChoiceField(label='Titulo', required=True, queryset=Papel.objects.all())
+    quantity = forms.IntegerField(label='Quantidade', validators=[validate_negative])
+
+    # def clean_quantity(self):
+    #     quantity = self.cleaned_data['quantity']
+    #
+    #     if quantity < 3:
+    #         raise ValidationError('Quantidade não pode ser menor que 3')
+    #     return quantity
+
     class Meta:
         model = Item
         exclude = ['invoice', 'created', 'modified']
-    #
-    # def is_valid(self):
-    #     valid = super(ItemForm, self).is_valid()
-    #     if self.cleaned_data.get('title', None) is None:
-    #         self.cleaned_data = {}
-    #     return valid
 
 
 ItemInvoiceFormSet = formset_factory(ItemForm, min_num=1, validate_min=True, extra=0, max_num=16, validate_max=True)

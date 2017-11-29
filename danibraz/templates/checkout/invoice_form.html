@@ -22,10 +22,11 @@
           </thead>
           {{ formset.management_form }}
           <tbody>
-          {% for item_form in formset.forms %}
+          {% for item_form in formset %}
             {% for hidden in item_form.hidden_fields %}
               {{ hidden }}
             {% endfor %}
+
 
             <tr class="item-form">
 
