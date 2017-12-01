@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from django.views.i18n import JavaScriptCatalog
 
-from danibraz.checkout.views import InvoiceFormView, InvoiceUpdateView, invoice_list
+from danibraz.checkout.views import InvoiceFormView, InvoiceUpdateView, invoice_list, InvoiceCreateView
 from danibraz.persons.views import clients_edit
 
 urlpatterns = [
@@ -10,6 +10,7 @@ urlpatterns = [
     # url(r'pedidos/listar/$', lancamentos, name='lancamento_list'),
     # url(r'pedido/novo/$', lancamentos, name='lancamento'),
     url(r'^pedido/novo/$', InvoiceFormView.as_view(), name='invoice_add'),
+    url(r'^pedido/novo2/$', InvoiceCreateView.as_view(), name='invoice_add2'),
     # url(r'pedido/editar/(?P<invoice_id>\d+)/$', InvoiceUpdateView, name='invoice_edit'),
     url(r'^pedido/editar/(?P<pk>\d+)/$$', InvoiceUpdateView.as_view(), name='invoice_edit'),
     #url(r'^pedido/editar/(?P<invoice_id>\d+)/$', invoices_edit, name='invoice_edit'),

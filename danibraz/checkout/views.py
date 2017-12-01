@@ -1,4 +1,5 @@
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import ImproperlyConfigured
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -6,10 +7,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 # Create your views here.
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, FormView, UpdateView
+from extra_views import CreateWithInlinesView, InlineFormSet, NamedFormsetsMixin
 
 from danibraz.checkout.forms import LancamentoForm, LancamentoItemFormSet, InvoiceForm, ItemInvoiceFormSet, \
-    ItemInvoiceUpdateFormSet
-from danibraz.checkout.models import Invoice
+    ItemInvoiceUpdateFormSet, ItemForm
+from danibraz.checkout.models import Invoice, Item
 
 
 def lancamentos_create2(request):
@@ -127,6 +129,94 @@ class InvoiceFormView(SuccessMessageMixin, FormView):
         else:
             print('O form não é valido!')
             return self.render_to_response(self.get_context_data(form=form))
+
+
+class FormActionViewMixin(object):
+    form_action = None
+
+    def get_form_action(self):
+        if not self.form_action:
+            raise ImproperlyConfigured(
+                "%(cls)s is missing a 'form_action'. Define "
+                "%(cls)s.form_action, or override "
+                "%(cls)s.get_form_action()." % {
+                    'cls': self.__class__.__name__
+                }
+            )
+        return self.form_action
+
+    def get_context_data(self, **kwargs):
+        context = super(FormActionViewMixin, self).get_context_data(**kwargs)
+        context['form_action'] = self.get_form_action()
+        return context
+
+
+class ItemInvoiceInlineFormSet(InlineFormSet):
+    model = Item
+    form_class = ItemForm
+    min_num = 1
+    max_num = 16
+    validate_min = True
+    validate_max = True
+    extra = 2
+    can_delete = False
+    items = 'items'
+
+
+class InvoiceCreateView(SuccessMessageMixin, FormActionViewMixin, NamedFormsetsMixin, CreateWithInlinesView):
+    model = Invoice
+    # fields = ['assistido']
+    form_class = InvoiceForm
+    template_name = 'checkout/invoice_form2.html'
+    inlines = [
+        ItemInvoiceInlineFormSet,
+    ]
+    inlines_names = [
+        'iteminvoice_inline'
+    ]
+
+    def get_form_action(self):
+        kwargs = {
+
+        }
+        return reverse_lazy('checkout:invoice_add2', kwargs=kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(InvoiceCreateView, self).get_form_kwargs()
+        kwargs['prefix'] = 'invoice'
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        contexto = super(InvoiceCreateView, self).get_context_data(**kwargs)
+        return contexto
+
+    # repare que esse metodo é diferente "forms_valid" com "s" e não form_valid
+    def forms_valid(self, form, inlines):
+        invoice = form.save(commit=False)
+        total = 0
+        for inline in inlines:
+            for item_form in inline.forms:
+                item = item_form.save(commit=False)
+                total = total + (item.quantity * item.unit_price)
+
+        invoice.total = total
+        # save sera chamado em:
+        return super(InvoiceCreateView, self).forms_valid(form, inlines)
+
+    def get_initial(self):
+        initial = super(InvoiceCreateView, self).get_initial()
+
+        initial.update(
+            {
+            }
+        )
+        return initial
+
+    def get_success_url(self):
+        url = reverse_lazy('checkout:invoice_add2')
+        return url
+
+
 
 
 class InvoiceUpdateView(SuccessMessageMixin, UpdateView):
