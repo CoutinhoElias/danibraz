@@ -149,6 +149,10 @@ class Item(models.Model):
         verbose_name_plural = 'Itens da Nota'
         #unique_together = (('invoice', 'title'),)
 
+    # def clean_fields(self):
+    #     if self.quantity < 5:
+    #         raise ValidationError({'quantity': ["Must be louder!",]})
+
 def post_save_item(sender, instance, **kwargs):
     if instance.title.stock >= instance.quantity:
         instance.title.stock -= instance.quantity
