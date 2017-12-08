@@ -3,7 +3,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 
 # Create your models here.
-from django.db.models import Sum
+from django.db.models import Sum, Model
 
 from danibraz.checkout.validate_error_invoice import validate_quantity
 
@@ -126,8 +126,6 @@ class Invoice(models.Model):
     def get_absolute_url(self):
         return reverse('checkout:invoice_edit', args=(self.pk,))
 
-    # def get_absolute_url(self):
-    #     return reverse('persons:clients_editar', args=[str(self.id)])
 
     @property
     def total_prop(self):
@@ -139,7 +137,7 @@ class Invoice(models.Model):
 class Item(models.Model):
     invoice = models.ForeignKey(Invoice, related_name='nota')
     title = models.ForeignKey('checkout.Papel')
-    quantity = models.PositiveSmallIntegerField('quantity', validators=[validate_quantity])
+    quantity = models.PositiveSmallIntegerField('quantidade')
     unit_price = models.DecimalField('unit price', max_digits=10, decimal_places=2)
     created = models.DateTimeField('created', auto_now_add=True)
     modified = models.DateTimeField('modified', auto_now=True)
@@ -149,19 +147,15 @@ class Item(models.Model):
         verbose_name_plural = 'Itens da Nota'
         #unique_together = (('invoice', 'title'),)
 
-    # def clean_fields(self):
-    #     if self.quantity < 5:
-    #         raise ValidationError({'quantity': ["Must be louder!",]})
+    def clean(self, *args, **kwargs):
+        if self.title.stock < self.quantity:
+            raise ValidationError({'quantity': (u"Quantidade está maior que estoque!")})
+        super(Item, self).clean(*args, **kwargs)
+
 
 def post_save_item(sender, instance, **kwargs):
-    if instance.title.stock >= instance.quantity:
         instance.title.stock -= instance.quantity
         instance.title.save()
-    else:
-        # instance.title.stock = 0
-        # instance.title.save()
-        #raise ValidationError('O valor do estoque ficará negativo, Não foi salvo')
-        errors_message = 'A nota não foi salva.'
 
 
 models.signals.post_save.connect(

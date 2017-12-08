@@ -44,28 +44,32 @@ def invoices_update(request, pk):
                 form.save()
                 formset.save()
 
-            return redirect('/invoices/')
+            return redirect('/lancamento/pedido/listar/')
     else:
         form = InvoiceForm(instance=invoice)
         formset = ItemFormSet(instance=invoice)
 
     forms = [formset.empty_form] + formset.forms
     context = {'form': form, 'formset': formset, 'forms': forms}
-    return render(request, 'invoices_edit.html', context)
+    return render(request, 'checkout/invoice_form.html', context)
 
 def invoices_delete(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
 
     if request.method == 'POST':
         invoice.delete()
-        return redirect('/invoices/')
+        return redirect('/lancamento/pedido/listar/')
 
     return render(request, 'invoices_delete.html', {'invoice': invoice})
 
 #///////////////////////////////////////////////////////////////////////////////////
-
-
 def invoice_list(request):
+    invoices = Invoice.objects.all()
+    return render(request, 'checkout/invoice_list.html', {'invoices': invoices})
+
+
+
+def invoice_list1(request):
     invoices = Invoice.objects.all()
     context = {'invoices': invoices}
     print(context)

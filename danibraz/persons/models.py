@@ -1,5 +1,6 @@
 # from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 
 
 class Person(models.Model):
@@ -56,7 +57,6 @@ class Client(Person):
     #     return u'cadastro/clientes/editar/%d' % self.id
 
     def get_absolute_url(self):
-        from django.urls import reverse
         return reverse('persons:clients_editar', args=[str(self.id)])
 
 
