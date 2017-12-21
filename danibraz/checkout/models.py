@@ -3,9 +3,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 
 # Create your models here.
-from django.db.models import Sum, Model
-
-from danibraz.checkout.validate_error_invoice import validate_quantity
+from django.db.models import Sum
 
 OPERACAO_CHOICES = (
     ('C', 'COMPRA'),
@@ -115,6 +113,10 @@ class Papel(models.Model):
     def __str__(self):
         return self.symbol
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.original_quantity = Item.quantity
+
 
 class Invoice(models.Model):
     customer = models.ForeignKey('persons.Client')
@@ -130,6 +132,9 @@ class Invoice(models.Model):
     @property
     def total_prop(self):
         return self.nota.all().aggregate(Sum('unit_price'))['unit_price__sum'] #+ self.custo_bovespa.all().aggregate(Sum('emolumentos'))['emolumentos__sum']
+
+    # def __str__(self):
+    #     return self.id
 
 
 
@@ -148,12 +153,29 @@ class Item(models.Model):
         #unique_together = (('invoice', 'title'),)
 
     def clean(self, *args, **kwargs):
-        if self.title.stock < self.quantity:
-            raise ValidationError({'quantity': (u"Quantidade está maior que estoque!")})
-        super(Item, self).clean(*args, **kwargs)
+        try:
+            qtd = Item.objects.get(pk=self.pk)
+            print('Estoque: ', self.title.stock, ', Quantidade nova: ', self.quantity, ', Quantidade antiga: ',
+                  qtd.quantity, ', Id da nota: ', self.pk)
+
+            if self.title.stock < (qtd.quantity - self.quantity):
+                raise ValidationError({'quantity': (u"Quantidade está maior que estoque!")})
+            super(Item, self).clean(*args, **kwargs)
+
+        except Item.DoesNotExist:
+            if self.title.stock < self.quantity:
+                raise ValidationError({'quantity': (u"Quantidade está maior que estoque!")})
+            super(Item, self).clean(*args, **kwargs)
 
 
 def post_save_item(sender, instance, **kwargs):
+    try:
+        qtd = Item.objects.get(pk=instance.pk)
+
+        instance.title.stock -= (instance.quantity - qtd.quantity)
+        instance.title.save()
+
+    except Item.DoesNotExist:
         instance.title.stock -= instance.quantity
         instance.title.save()
 
@@ -161,3 +183,100 @@ def post_save_item(sender, instance, **kwargs):
 models.signals.post_save.connect(
     post_save_item, sender=Item, dispatch_uid='post_save_item'
 )
+
+
+TRANSACTION_KIND = (
+    ("in", "Entrada"),
+    ("out", "Saida"),
+    ("eaj", "Entrada de Ajuste"),
+    ("saj", "Saída de Ajuste")
+)
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    #deleted = models.BooleanField(default=False)
+
+    def qtd_avaliable(self):
+        transactions = self.transactions.all().order_by("date_transaction")
+        total_avaliable = 0
+
+        for transaction in transactions:
+            if transaction.transaction_kind == 'in' or transaction.transaction_kind == 'eaj':
+                total_avaliable += transaction.quantity
+            else:
+                total_avaliable -= transaction.quantity
+
+        return total_avaliable
+
+    def __unicode__(self):
+        return "Produto {self.name} possuí {self.qtd_avaliable()} em estoque."
+
+    def __str__(self):
+        return self.name
+
+
+class Transaction(models.Model):
+    quantity = models.PositiveIntegerField()
+    transaction_kind = models.CharField(max_length=4, choices=TRANSACTION_KIND)
+    date_transaction = models.DateTimeField(auto_now=True)
+    product = models.ForeignKey(Product, related_name='transactions')
+
+    def historico_vendas(self, product, **extra_filter):
+        pass
+
+    def historico_entradas(self, product, **extra_filter):
+        # transactions
+        # estrutura para montar algo \o/
+        pass
+
+    def __unicode__(self):
+        trans_kind = "Entrada"
+        return "{trans_kind} de {self.quantity} unidades do produto {self.product.name} no dia {self.date_transaction}."
+
+    def __str__(self):
+        return self.transaction_kind
+
+
+# # Passo 1
+# papel = Product(name="Folha de Papel")
+# papel.save()
+# compra_papel = Transaction(quantity=300, transaction_kind="in", product=papel)
+# compra_papel.save()
+# papel.qtd_avaliable() # 300
+# # Fim do Passo 1
+#
+# # Passo 2
+# papel = Product.objects.get(name="Folha de Papel")
+# venda_papel = Transaction(quantity=100, transaction_kind="out", product=papel)
+# venda_papel.save()
+# papel.qtd_avaliable() # 200
+# # Fim do Passo 2
+#
+# # Edit produto
+# pacote_papel = Product.objects.get(name="Folha de Papel")
+# pacote_papel.name = "Pacote de 500 folhas de papel"
+# pacote_papel.qtd_avaliable() # 200
+# pacote_papel.save()
+# pacote_papel.qtd_avaliable() # 200
+# ajuste = Transaction(quantity=190, transaction_kind="saj", product=pacote_papel)
+# ajuste.save()
+# pacote_papel.qtd_avaliable() # 10
+# # Fim Edit
+
+
+#MEU MODELO
+# 1 - IMPORTA OS MODELOS
+#from danibraz.checkout.models import Product, Transaction
+
+# 2 - CRIA UMPRODUTO
+#Product.objects.create(name='Novo produto')
+
+# 3 - FILTRA ESSEPRODUTO PARA USAR NO INSERT
+#prod = Product.objects.all().[0]
+
+# 4 - CRIA UMAMOVIMENTAÇÃO DEENTRADA OU SAÍDA
+#Transaction.objects.create(quantity=190, transaction_kind="saj", product=prod)
+
+# 5 - RETORNAO ESTOQUE ATUAL DO PRODUTO
+#prod.qtd_avaliable()

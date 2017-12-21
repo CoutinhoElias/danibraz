@@ -289,7 +289,7 @@
                             swal("Erro", "{{ message }}", "error")
                         });
                     </script>
-                {% else %}
+                {% elif message.tags == 'success' %}
                     <script>
                         $(document).ready(function () {
                             swal("Sucesso", "{{ message }}", "success")

@@ -6,12 +6,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from danibraz.checkout.forms import ItemFormSet
 from danibraz.checkout.forms import InvoiceForm
-from danibraz.checkout.models import Invoice
+from danibraz.checkout.models import Invoice, Item
 
 
 #///////////////////////////////////////////////////////////////////////////////////
 #AJUSTAR DELETE E EDIT
 def invoices_create(request):
+    success_message = 'The invoice was edited correctly.'
     if request.method == 'POST':
         form = InvoiceForm(request.POST)
         formset = ItemFormSet(request.POST)
@@ -34,13 +35,22 @@ def invoices_create(request):
 
 def invoices_update(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
-
+    print(request.method)
     if request.method == 'POST':
         form = InvoiceForm(request.POST, instance=invoice)
         formset = ItemFormSet(request.POST, instance=invoice)
 
+        #codigo_produto = int(request.POST['Invoice'])
+
         if form.is_valid() and formset.is_valid():
+
+            itemNota = Item.objects.filter(invoice_id=pk)
+            #print("quantidade form:",formset.quantity)
+
             with transaction.atomic():
+                for item in itemNota:
+                    print("Nr:", item.invoice.pk, "Titulo:", item.title, "Qtd:", item.quantity, "Preço:",
+                          item.unit_price)
                 form.save()
                 formset.save()
 
@@ -67,10 +77,3 @@ def invoice_list(request):
     invoices = Invoice.objects.all()
     return render(request, 'checkout/invoice_list.html', {'invoices': invoices})
 
-
-
-def invoice_list1(request):
-    invoices = Invoice.objects.all()
-    context = {'invoices': invoices}
-    print(context)
-    return render(request, 'checkout/invoice_list.html', context)
