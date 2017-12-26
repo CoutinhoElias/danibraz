@@ -44,13 +44,13 @@ def invoices_update(request, pk):
 
         if form.is_valid() and formset.is_valid():
 
-            itemNota = Item.objects.filter(invoice_id=pk)
+            #itemNota = Item.objects.filter(invoice_id=pk)
             #print("quantidade form:",formset.quantity)
 
             with transaction.atomic():
-                for item in itemNota:
-                    print("Nr:", item.invoice.pk, "Titulo:", item.title, "Qtd:", item.quantity, "Preço:",
-                          item.unit_price)
+                #for item in itemNota:
+                    #print("Nr:", item.invoice.pk, "Titulo:", item.title, "Qtd:", item.quantity, "Preço:",
+                    #      item.unit_price)
                 form.save()
                 formset.save()
 

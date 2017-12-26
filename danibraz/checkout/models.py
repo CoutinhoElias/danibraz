@@ -100,6 +100,13 @@ class LancamentoItem(models.Model):
 
 
 #----------------------------------------------------------------------------------
+TRANSACTION_KIND = (
+    ("in", "Entrada"),
+    ("out", "Saida"),
+    ("eaj", "Entrada de Ajuste"),
+    ("saj", "Saída de Ajuste")
+)
+
 class Papel(models.Model):
     symbol = models.CharField('Papel', max_length=100, choices=PAPEL_CHOICES)
     stock = models.PositiveSmallIntegerField('Estoque')
@@ -109,13 +116,28 @@ class Papel(models.Model):
     class Meta:
         verbose_name = 'Papel'
         verbose_name_plural = 'Papeis'
+        
+    def qtd_avaliable(self):
+        itens_nota = self.itens_nota.all().order_by("created")
+        total_avaliable = 0
 
+        for transaction in itens_nota:
+            if transaction.transaction_kind == 'in' or transaction.transaction_kind == 'eaj':
+                total_avaliable += transaction.quantity
+            else:
+                total_avaliable -= transaction.quantity
+
+        return total_avaliable
+
+    def __unicode__(self):
+        return "Produto {self.name} possuí {self.qtd_avaliable()} em estoque."
+    
     def __str__(self):
         return self.symbol
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.original_quantity = Item.quantity
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.original_quantity = Item.quantity
 
 
 class Invoice(models.Model):
@@ -124,6 +146,7 @@ class Invoice(models.Model):
     total = models.IntegerField('Total')
     created = models.DateTimeField('created', auto_now_add=True)
     modified = models.DateTimeField('modified', auto_now=True)
+    transaction_kind = models.CharField('Tipo Movimento', max_length=4, choices=TRANSACTION_KIND)
 
     def get_absolute_url(self):
         return reverse('checkout:invoice_edit', args=(self.pk,))
@@ -137,10 +160,8 @@ class Invoice(models.Model):
     #     return self.id
 
 
-
-
 class Item(models.Model):
-    invoice = models.ForeignKey(Invoice, related_name='nota')
+    invoice = models.ForeignKey(Invoice, related_name='itens_nota')
     title = models.ForeignKey('checkout.Papel')
     quantity = models.PositiveSmallIntegerField('quantidade')
     unit_price = models.DecimalField('unit price', max_digits=10, decimal_places=2)
@@ -155,8 +176,8 @@ class Item(models.Model):
     def clean(self, *args, **kwargs):
         try:
             qtd = Item.objects.get(pk=self.pk)
-            print('Estoque: ', self.title.stock, ', Quantidade nova: ', self.quantity, ', Quantidade antiga: ',
-                  qtd.quantity, ', Id da nota: ', self.pk)
+            #print('Estoque: ', self.title.stock, ', Quantidade nova: ', self.quantity, ', Quantidade antiga: ',
+            #      qtd.quantity, ', Id da nota: ', self.pk)
 
             if self.title.stock < (qtd.quantity - self.quantity):
                 raise ValidationError({'quantity': (u"Quantidade está maior que estoque!")})
@@ -169,15 +190,17 @@ class Item(models.Model):
 
 
 def post_save_item(sender, instance, **kwargs):
-    try:
-        qtd = Item.objects.get(pk=instance.pk)
-
-        instance.title.stock -= (instance.quantity - qtd.quantity)
-        instance.title.save()
-
-    except Item.DoesNotExist:
-        instance.title.stock -= instance.quantity
-        instance.title.save()
+    instance.title.stock = instance.title.qtd_avaliable()
+    instance.title.save()
+    # try:
+    #     qtd = Item.objects.get(pk=instance.pk)
+    # 
+    #     instance.title.stock -= (instance.quantity - qtd.quantity)
+    #     instance.title.save()
+    # 
+    # except Item.DoesNotExist:
+    #     instance.title.stock -= instance.quantity
+    #     instance.title.save()
 
 
 models.signals.post_save.connect(
@@ -185,12 +208,7 @@ models.signals.post_save.connect(
 )
 
 
-TRANSACTION_KIND = (
-    ("in", "Entrada"),
-    ("out", "Saida"),
-    ("eaj", "Entrada de Ajuste"),
-    ("saj", "Saída de Ajuste")
-)
+
 
 
 class Product(models.Model):
