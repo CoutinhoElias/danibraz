@@ -109,7 +109,7 @@ TRANSACTION_KIND = (
 
 class Papel(models.Model):
     symbol = models.CharField('Papel', max_length=100, choices=PAPEL_CHOICES)
-    stock = models.PositiveSmallIntegerField('Estoque')
+    stock = models.IntegerField('Estoque')
     created = models.DateTimeField('created', auto_now_add=True)
     modified = models.DateTimeField('modified', auto_now=True)
 
@@ -122,7 +122,7 @@ class Papel(models.Model):
         total_avaliable = 0
 
         for transaction in itens_nota:
-            if transaction.transaction_kind == 'in' or transaction.transaction_kind == 'eaj':
+            if transaction.invoice.transaction_kind == 'in' or transaction.invoice.transaction_kind == 'eaj':
                 total_avaliable += transaction.quantity
             else:
                 total_avaliable -= transaction.quantity
@@ -161,36 +161,38 @@ class Invoice(models.Model):
 
 
 class Item(models.Model):
-    invoice = models.ForeignKey(Invoice, related_name='itens_nota')
-    title = models.ForeignKey('checkout.Papel')
+    invoice = models.ForeignKey('checkout.Invoice', related_name='nota')
+    title = models.ForeignKey('checkout.Papel', related_name='itens_nota')
     quantity = models.PositiveSmallIntegerField('quantidade')
     unit_price = models.DecimalField('unit price', max_digits=10, decimal_places=2)
     created = models.DateTimeField('created', auto_now_add=True)
     modified = models.DateTimeField('modified', auto_now=True)
+
 
     class Meta:
         verbose_name = 'Item da Nota'
         verbose_name_plural = 'Itens da Nota'
         #unique_together = (('invoice', 'title'),)
 
-    def clean(self, *args, **kwargs):
-        try:
-            qtd = Item.objects.get(pk=self.pk)
-            #print('Estoque: ', self.title.stock, ', Quantidade nova: ', self.quantity, ', Quantidade antiga: ',
-            #      qtd.quantity, ', Id da nota: ', self.pk)
-
-            if self.title.stock < (qtd.quantity - self.quantity):
-                raise ValidationError({'quantity': (u"Quantidade está maior que estoque!")})
-            super(Item, self).clean(*args, **kwargs)
-
-        except Item.DoesNotExist:
-            if self.title.stock < self.quantity:
-                raise ValidationError({'quantity': (u"Quantidade está maior que estoque!")})
-            super(Item, self).clean(*args, **kwargs)
+    # def clean(self, *args, **kwargs):
+    #     try:
+    #         qtd = Item.objects.get(pk=self.pk)
+    #         #print('Estoque: ', self.title.stock, ', Quantidade nova: ', self.quantity, ', Quantidade antiga: ',
+    #         #      qtd.quantity, ', Id da nota: ', self.pk)
+    #
+    #         if self.title.stock < (qtd.quantity - self.quantity):
+    #             raise ValidationError({'quantity': (u"Quantidade está maior que estoque!")})
+    #         super(Item, self).clean(*args, **kwargs)
+    #
+    #     except Item.DoesNotExist:
+    #         if self.title.stock < self.quantity:
+    #             raise ValidationError({'quantity': (u"Quantidade está maior que estoque!")})
+    #         super(Item, self).clean(*args, **kwargs)
 
 
 def post_save_item(sender, instance, **kwargs):
-    instance.title.stock = instance.title.qtd_avaliable()
+    instance.title.stock -= instance.title.stock
+    instance.title.stock += instance.title.qtd_avaliable()
     instance.title.save()
     # try:
     #     qtd = Item.objects.get(pk=instance.pk)

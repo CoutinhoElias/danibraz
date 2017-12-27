@@ -150,7 +150,7 @@ def clients_edit(request, person_id):
             print(form)
             return render(request, 'persons/person.html', {'form':form})
     else:
-        print('Entrou emm odo de edição do cliente '+person_id)
+        print('Entrou em modo de edição do cliente '+person_id)
 
         request.session['person_id'] = person_id
         print('A variável person_id da session já possui o valor: '+request.session['person_id'])
