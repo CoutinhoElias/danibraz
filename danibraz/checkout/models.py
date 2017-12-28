@@ -190,10 +190,20 @@ class Item(models.Model):
     #         super(Item, self).clean(*args, **kwargs)
 
 
-def post_save_item(sender, instance, **kwargs):
-    instance.title.stock -= instance.title.stock
-    instance.title.stock += instance.title.qtd_avaliable()
-    instance.title.save()
+def post_save_item(sender, instance, created,  **kwargs):
+    if created:
+        if instance.invoice.transaction_kind == 'in' or instance.invoice.transaction_kind == 'eaj':
+            instance.title.stock += instance.quantity
+            instance.title.save()
+        else:
+            instance.title.stock -= instance.quantity
+            instance.title.save()
+    else:
+        instance.title.stock -= instance.title.stock
+        instance.title.stock += instance.title.qtd_avaliable()
+        instance.title.save()
+
+
     # try:
     #     qtd = Item.objects.get(pk=instance.pk)
     # 
