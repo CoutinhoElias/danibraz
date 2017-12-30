@@ -74,6 +74,6 @@ def invoices_delete(request, pk):
 
 #///////////////////////////////////////////////////////////////////////////////////
 def invoice_list(request):
-    invoices = Invoice.objects.all()
+    invoices = Invoice.objects.all().order_by("emissao")
     return render(request, 'checkout/invoice_list.html', {'invoices': invoices})
 

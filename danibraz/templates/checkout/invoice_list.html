@@ -25,10 +25,14 @@
                             <td>{{ invoice.emissao|date:"d/m/Y" }}</td>
                             <td>{{ invoice.total|floatformat:"2" }}</td>
                             <td>{{ invoice.total_prop|floatformat:"2" }}</td>
-                            <td>{% if invoice.compra_sempre %}
-                                    <i class="material-icons">check_circle</i>
-                                {% else %}
-                                    <a href="{{ invoice.invoice_delete }}"><i class="material-icons">close</i></a>
+                            <td>{% if invoice.transaction_kind == 'out'%}
+                                    <i class="material-icons">arrow_forward</i>
+                                {% elif invoice.transaction_kind == 'in' %}
+                                    <i class="material-icons">arrow_back</i>
+                                {% elif invoice.transaction_kind == 'eaj' %}
+                                    <i class="material-icons">subdirectory_arrow_left</i>
+                                {% elif invoice.transaction_kind == 'saj' %}
+                                    <i class="material-icons">subdirectory_arrow_right</i>
                                 {% endif %}
                             </td>
                         </tr>
