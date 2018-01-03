@@ -34,23 +34,15 @@ def invoices_create(request):
 
 
 def invoices_update(request, pk):
+    #invoice = get_object_or_404(Invoice, pk=pk)
     invoice = get_object_or_404(Invoice, pk=pk)
     print(request.method)
     if request.method == 'POST':
         form = InvoiceForm(request.POST, instance=invoice)
         formset = ItemFormSet(request.POST, instance=invoice)
 
-        #codigo_produto = int(request.POST['Invoice'])
-
         if form.is_valid() and formset.is_valid():
-
-            #itemNota = Item.objects.filter(invoice_id=pk)
-            #print("quantidade form:",formset.quantity)
-
             with transaction.atomic():
-                #for item in itemNota:
-                    #print("Nr:", item.invoice.pk, "Titulo:", item.title, "Qtd:", item.quantity, "Preço:",
-                    #      item.unit_price)
                 form.save()
                 formset.save()
 
@@ -74,6 +66,6 @@ def invoices_delete(request, pk):
 
 #///////////////////////////////////////////////////////////////////////////////////
 def invoice_list(request):
-    invoices = Invoice.objects.all().order_by("emissao")
+    invoices = Invoice.objects.select_related('customer').all().order_by("emissao")
     return render(request, 'checkout/invoice_list.html', {'invoices': invoices})
 

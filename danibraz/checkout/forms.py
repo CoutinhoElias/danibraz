@@ -5,17 +5,17 @@ from danibraz.checkout.models import Item, Invoice
 from danibraz.static.material import Layout, Row
 
 
-class ItemForm(forms.ModelForm):
-    title = forms.ChoiceField(label='Titulo', required=True)
-    quantity = forms.IntegerField(label='Quantidade')
-
-    def __init__(self, *args, **kwargs):
-        super(ItemForm, self).__init__(*args, **kwargs)
-        self.fields['quantity'].localize = True
-
-    class Meta:
-        model = Item
-        exclude = ['invoice', 'created', 'modified']
+# class ItemForm(forms.ModelForm):
+#     title = forms.ChoiceField(label='Titulo', required=True)
+#     quantity = forms.IntegerField(label='Quantidade')
+#
+#     def __init__(self, *args, **kwargs):
+#         super(ItemForm, self).__init__(*args, **kwargs)
+#         self.fields['quantity'].localize = True
+#
+#     class Meta:
+#         model = Item
+#         exclude = ['invoice', 'created', 'modified']
 #///////////////////////////////////////////////////////////////////////////////////////////////////
 
 

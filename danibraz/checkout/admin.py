@@ -25,7 +25,7 @@ class ItemInline(admin.TabularInline):
     extra = 1
 
 class InvoiceModelAdmin(admin.ModelAdmin):
-    readonly_fields = ['total_prop']
+    #readonly_fields = ['total_prop']
     inlines = [ItemInline]
 
 

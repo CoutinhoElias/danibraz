@@ -118,7 +118,7 @@ class Papel(models.Model):
         verbose_name_plural = 'Papeis'
         
     def qtd_avaliable(self):
-        itens_nota = self.itens_nota.all().order_by("created")
+        itens_nota = Item.objects.select_related('title').all().order_by("created")
         total_avaliable = 0
 
         for transaction in itens_nota:
@@ -152,9 +152,9 @@ class Invoice(models.Model):
         return reverse('checkout:invoice_edit', args=(self.pk,))
 
 
-    @property
-    def total_prop(self):
-        return self.nota.all().aggregate(Sum('unit_price'))['unit_price__sum'] #+ self.custo_bovespa.all().aggregate(Sum('emolumentos'))['emolumentos__sum']
+    # @property
+    # def total_prop(self):
+    #     return self.nota.all().aggregate(Sum('unit_price'))['unit_price__sum'] #+ self.custo_bovespa.all().aggregate(Sum('emolumentos'))['emolumentos__sum']
 
     # def __str__(self):
     #     return self.id
