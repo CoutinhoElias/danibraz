@@ -15,9 +15,10 @@
       <fieldset>
         <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp mdl-data-table__cell--non-numeric">
           <thead class="#cfd8dc blue-grey lighten-4">
-          <th class="mdl-data-table__cell--non-numeric" >Title</th>
-          <th class="mdl-data-table__cell--non-numeric">Quantity</th>
-          <th>Unit price</th>
+          <th class="mdl-data-table__cell--non-numeric" >Produto</th>
+          <th class="mdl-data-table__cell--non-numeric">Quantidade</th>
+          <th>Preço unitário</th>
+          <th>Outros Custos</th>
           <th></th>
           </thead>
           {{ formset.management_form }}
@@ -33,6 +34,7 @@
               <td>{{ item_form.title.errors }} {{ item_form.title }}</td>
               <td>{{ item_form.quantity.errors }} {% render_field item_form.quantity class+="qtd" %}</td>
               <td>{{ item_form.unit_price.errors }} {% render_field item_form.unit_price class+="vl" %}</td>
+              <td>{{ item_form.other_costs.errors }} {% render_field item_form.other_costs class+="vl" %}</td>
               <td class=""></td>
 
             </tr>

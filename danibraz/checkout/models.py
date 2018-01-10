@@ -117,7 +117,7 @@ class Papel(models.Model):
         verbose_name = 'Papel'
         verbose_name_plural = 'Papeis'
         
-    def qtd_avaliable(self):
+    def stock_avaliable(self):
         itens_nota = Item.objects.select_related('title').all().order_by("created")
         total_avaliable = 0
 
@@ -129,8 +129,13 @@ class Papel(models.Model):
 
         return total_avaliable
 
+    @property
+    def total_prop(self):
+        return self.title.all().aggregate(Sum('unit_price'))['unit_price__sum'] #+ self.custo_bovespa.all().aggregate(Sum('emolumentos'))['emolumentos__sum']
+
+
     def __unicode__(self):
-        return "Produto {self.name} possuí {self.qtd_avaliable()} em estoque."
+        return "Produto {self.name} possuí {self.stock_avaliable()} em estoque."
     
     def __str__(self):
         return self.symbol
@@ -162,11 +167,19 @@ class Invoice(models.Model):
 
 class Item(models.Model):
     invoice = models.ForeignKey('checkout.Invoice', related_name='nota')
-    title = models.ForeignKey('checkout.Papel', related_name='itens_nota')
+    title = models.ForeignKey('checkout.Papel')
     quantity = models.PositiveSmallIntegerField('quantidade')
     unit_price = models.DecimalField('unit price', max_digits=10, decimal_places=2)
+    other_costs = models.DecimalField('other costs', max_digits=10, decimal_places=2)
+    #total = models.DecimalField('total', max_digits=10, decimal_places=2)
     created = models.DateTimeField('created', auto_now_add=True)
     modified = models.DateTimeField('modified', auto_now=True)
+
+    @property
+    def total(self):
+        return (self.quantity * self.unit_price) + self.other_costs
+
+
 
 
     class Meta:
@@ -200,7 +213,7 @@ def post_save_item(sender, instance, created,  **kwargs):
             instance.title.save()
     else:
         instance.title.stock -= instance.title.stock
-        instance.title.stock += instance.title.qtd_avaliable()
+        instance.title.stock += instance.title.stock_avaliable()
         instance.title.save()
 
 
@@ -227,7 +240,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     #deleted = models.BooleanField(default=False)
 
-    def qtd_avaliable(self):
+    def stock_avaliable(self):
         transactions = self.transactions.all().order_by("date_transaction")
         total_avaliable = 0
 
@@ -240,7 +253,7 @@ class Product(models.Model):
         return total_avaliable
 
     def __unicode__(self):
-        return "Produto {self.name} possuí {self.qtd_avaliable()} em estoque."
+        return "Produto {self.name} possuí {self.stock_avaliable()} em estoque."
 
     def __str__(self):
         return self.name
@@ -273,25 +286,25 @@ class Transaction(models.Model):
 # papel.save()
 # compra_papel = Transaction(quantity=300, transaction_kind="in", product=papel)
 # compra_papel.save()
-# papel.qtd_avaliable() # 300
+# papel.stock_avaliable() # 300
 # # Fim do Passo 1
 #
 # # Passo 2
 # papel = Product.objects.get(name="Folha de Papel")
 # venda_papel = Transaction(quantity=100, transaction_kind="out", product=papel)
 # venda_papel.save()
-# papel.qtd_avaliable() # 200
+# papel.stock_avaliable() # 200
 # # Fim do Passo 2
 #
 # # Edit produto
 # pacote_papel = Product.objects.get(name="Folha de Papel")
 # pacote_papel.name = "Pacote de 500 folhas de papel"
-# pacote_papel.qtd_avaliable() # 200
+# pacote_papel.stock_avaliable() # 200
 # pacote_papel.save()
-# pacote_papel.qtd_avaliable() # 200
+# pacote_papel.stock_avaliable() # 200
 # ajuste = Transaction(quantity=190, transaction_kind="saj", product=pacote_papel)
 # ajuste.save()
-# pacote_papel.qtd_avaliable() # 10
+# pacote_papel.stock_avaliable() # 10
 # # Fim Edit
 
 
@@ -309,4 +322,4 @@ class Transaction(models.Model):
 #Transaction.objects.create(quantity=190, transaction_kind="saj", product=prod)
 
 # 5 - RETORNAO ESTOQUE ATUAL DO PRODUTO
-#prod.qtd_avaliable()
+#prod.stock_avaliable()

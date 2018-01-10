@@ -38,8 +38,12 @@ def invoices_update(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
     print(request.method)
     if request.method == 'POST':
+        #sub_brand = Item.objects.select_related('title').get(invoice_id=pk)
+        #sub_brand = Item.objects.select_related('title').get(invoice_id=pk)
+
         form = InvoiceForm(request.POST, instance=invoice)
         formset = ItemFormSet(request.POST, instance=invoice)
+        #formset = ItemFormSet(request.POST, sub_brand)
 
         if form.is_valid() and formset.is_valid():
             with transaction.atomic():
