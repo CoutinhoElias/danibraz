@@ -19,6 +19,7 @@
           <th class="mdl-data-table__cell--non-numeric">Quantidade</th>
           <th>Preço unitário</th>
           <th>Outros Custos</th>
+          <th>Total</th>
           <th></th>
           </thead>
           {{ formset.management_form }}
@@ -35,6 +36,7 @@
               <td>{{ item_form.quantity.errors }} {% render_field item_form.quantity class+="qtd" %}</td>
               <td>{{ item_form.unit_price.errors }} {% render_field item_form.unit_price class+="vl" %}</td>
               <td>{{ item_form.other_costs.errors }} {% render_field item_form.other_costs class+="vl" %}</td>
+              <td>{{ item_form.instance.total }}</td>
               <td class=""></td>
 
             </tr>

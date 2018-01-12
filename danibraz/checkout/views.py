@@ -59,6 +59,7 @@ def invoices_update(request, pk):
     context = {'form': form, 'formset': formset, 'forms': forms}
     return render(request, 'checkout/invoice_form.html', context)
 
+
 def invoices_delete(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
 
@@ -68,8 +69,21 @@ def invoices_delete(request, pk):
 
     return render(request, 'invoices_delete.html', {'invoice': invoice})
 
-#///////////////////////////////////////////////////////////////////////////////////
+
 def invoice_list(request):
     invoices = Invoice.objects.select_related('customer').all().order_by("emissao")
     return render(request, 'checkout/invoice_list.html', {'invoices': invoices})
+
+
+def invoice_list_item(request):
+    q = request.GET.get('search_box')
+    print(request.GET)
+    if q:
+        print(q)
+        items = Invoice.objects.prefetch_related('nota').all().filter(name__icontains=q)
+    else:
+        items = Invoice.objects.prefetch_related('nota').all()
+    context = {'items': items}
+    print(context)
+    return render(request, 'checkout/item_list.html', context)
 

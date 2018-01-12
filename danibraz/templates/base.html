@@ -186,6 +186,11 @@
                               {# URL provided by django-allauth/account/urls.py #}
                               <a href="{% url 'checkout:invoice_add'  %}">{% trans "Novo" %}</a>
                             </li>
+
+                            <li>
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a href="{% url 'checkout:invoice_list'  %}">{% trans "Listar" %}</a>
+                            </li>
                           {% endif %}
                         </ul>
                       </div>

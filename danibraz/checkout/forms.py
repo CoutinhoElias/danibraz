@@ -4,20 +4,7 @@ from django.forms import inlineformset_factory
 from danibraz.checkout.models import Item, Invoice
 from danibraz.static.material import Layout, Row
 
-
-# class ItemForm(forms.models.ModelForm):
-#     title = forms.ChoiceField(label='Titulo', required=True)
-#     quantity = forms.IntegerField(label='Quantidade')
 #     total = forms.DecimalField(label='Total', widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-
-    # def __init__(self, *args, **kwargs):
-    #     super(ItemForm, self).__init__(*args, **kwargs)
-    #     self.fields['quantity'].localize = True
-
-    # class Meta:
-    #     model = Item
-    #     exclude = ['invoice', 'created', 'modified']
-#///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 class InvoiceForm(forms.models.ModelForm):
