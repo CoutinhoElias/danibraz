@@ -15,28 +15,31 @@
           <th>Preço unitário</th>
           <th>Outros Custos</th>
           <th>Total</th>
+          <th>Estoque</th>
           <th></th>
           </thead>
           <tbody>
           {% for item in items %}
             <tr class="item-form">
-                   <td>{% if item.transaction_kind == 'out'%}
+                   <td>{% if item.invoice.transaction_kind == 'out'%}
                             SAIDA
-                        {% elif item.transaction_kind == 'in' %}
+                        {% elif item.invoice.transaction_kind == 'in' %}
                             ENTRADA
-                        {% elif item.transaction_kind == 'eaj' %}
+                        {% elif item.invoice.transaction_kind == 'eaj' %}
                             ENT. AJUSTE
-                        {% elif item.transaction_kind == 'saj' %}
+                        {% elif item.invoice.transaction_kind == 'saj' %}
                             SAI. AJUSTE
                         {% endif %}
                    </td>
-              <td>{{ item.pk }}</td>
-              <td>{{ item.emissao|date:"d/m/Y" }}</td>
-              <td>{{ item.nota.title}}</td>
-              <td>{{ item.nota.quantity }}</td>
+              <td>{{ item.invoice.pk }}</td>
+              <td>{{ item.invoice.emissao|date:"d/m/Y" }}</td>
+              <td>{{ item.title}}</td>
+              <td>{{ item.quantity }}</td>
               <td>{{ item.unit_price }}</td>
               <td>{{ item.other_costs }}</td>
               <td>{{ item.total }}</td>
+              <td>{{ item.stock }}</td>
+              <td>{{ item.title.entradas }}</td>
               <td class=""></td>
 
             </tr>

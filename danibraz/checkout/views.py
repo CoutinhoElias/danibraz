@@ -80,9 +80,9 @@ def invoice_list_item(request):
     print(request.GET)
     if q:
         print(q)
-        items = Invoice.objects.prefetch_related('nota').all().filter(name__icontains=q)
+        items = Item.objects.select_related('title','invoice').all().filter(name__icontains=q)
     else:
-        items = Invoice.objects.prefetch_related('nota').all()
+        items = Item.objects.select_related('title','invoice').all().order_by('invoice__emissao')
     context = {'items': items}
     print(context)
     return render(request, 'checkout/item_list.html', context)

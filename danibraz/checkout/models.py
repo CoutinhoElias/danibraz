@@ -1,3 +1,6 @@
+from datetime import date
+from time import strptime
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.core.urlresolvers import reverse
@@ -130,9 +133,9 @@ class Papel(models.Model):
         return total_avaliable
 
     @property
-    def total_prop(self):
-        return self.title.all().aggregate(Sum('unit_price'))['unit_price__sum'] #+ self.custo_bovespa.all().aggregate(Sum('emolumentos'))['emolumentos__sum']
-
+    def entradas(self):
+        return self.symbol.filter(invoice__transaction_kind__in=['in', 'eaj'], invoice__emissao__lte=self.emissao).aggregate(Sum('quantity'))[
+            'quantity__sum']
 
     def __unicode__(self):
         return "Produto {self.name} possuí {self.stock_avaliable()} em estoque."
@@ -156,22 +159,26 @@ class Invoice(models.Model):
     def get_absolute_url(self):
         return reverse('checkout:invoice_edit', args=(self.pk,))
 
+#return self.item.filter(invoice__transaction_kind__in=['in', 'eaj'], invoice__emissao__lte=date(2014, 2, 1), title=2).aggregate(Sum('quantity'))[
+    @property
+    def entradass(self):
+        print(self.emissao)
+        return self.item.filter(invoice__transaction_kind__in=['in', 'eaj'], invoice__emissao__lte=self.emissao).aggregate(Sum('quantity'))[
+            'quantity__sum']
 
-    # @property
-    # def total_prop(self):
-    #     return self.nota.all().aggregate(Sum('unit_price'))['unit_price__sum'] #+ self.custo_bovespa.all().aggregate(Sum('emolumentos'))['emolumentos__sum']
+    @property
+    def saidas(self):
+        return self.item.filter(invoice__transaction_kind__in=['out', 'saj']).aggregate(Sum('quantity'))[
+            'quantity__sum']
 
-    # def __str__(self):
-    #     return self.id
 
 
 class Item(models.Model):
-    invoice = models.ForeignKey('checkout.Invoice', related_name='nota')
+    invoice = models.ForeignKey('checkout.Invoice', related_name='item')
     title = models.ForeignKey('checkout.Papel')
     quantity = models.PositiveSmallIntegerField('quantidade')
     unit_price = models.DecimalField('unit price', max_digits=10, decimal_places=2)
     other_costs = models.DecimalField('other costs', max_digits=10, decimal_places=2)
-    #total = models.DecimalField('total', max_digits=10, decimal_places=2)
     created = models.DateTimeField('created', auto_now_add=True)
     modified = models.DateTimeField('modified', auto_now=True)
 
@@ -179,8 +186,9 @@ class Item(models.Model):
     def total(self):
         return (self.quantity * self.unit_price) + self.other_costs
 
-
-
+    @property
+    def stock(self):
+        return self.title.stock
 
     class Meta:
         verbose_name = 'Item da Nota'
