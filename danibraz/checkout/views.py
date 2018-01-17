@@ -1,5 +1,6 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.db import transaction
+from django.db.models import Sum
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
@@ -82,7 +83,20 @@ def invoice_list_item(request):
         print(q)
         items = Item.objects.select_related('title','invoice').all().filter(name__icontains=q)
     else:
-        items = Item.objects.select_related('title','invoice').all().order_by('invoice__emissao')
+        items = Item.objects.select_related('title', 'invoice').all().order_by('invoice__emissao')
+        somatorios = {}
+
+        for item in items:
+            somatorio = somatorios.get(item.title, 0)
+
+            if item.invoice.transaction_kind == 'in' or item.invoice.transaction_kind == 'eaj':
+                somatorio += item.quantity
+            else:
+                somatorio -= item.quantity
+
+            item.saldo = somatorio
+            somatorios[item.title] = somatorio
+
     context = {'items': items}
     print(context)
     return render(request, 'checkout/item_list.html', context)

@@ -132,10 +132,6 @@ class Papel(models.Model):
 
         return total_avaliable
 
-    @property
-    def entradas(self):
-        return self.symbol.filter(invoice__transaction_kind__in=['in', 'eaj'], invoice__emissao__lte=self.emissao).aggregate(Sum('quantity'))[
-            'quantity__sum']
 
     def __unicode__(self):
         return "Produto {self.name} possuí {self.stock_avaliable()} em estoque."
@@ -162,7 +158,6 @@ class Invoice(models.Model):
 #return self.item.filter(invoice__transaction_kind__in=['in', 'eaj'], invoice__emissao__lte=date(2014, 2, 1), title=2).aggregate(Sum('quantity'))[
     @property
     def entradass(self):
-        print(self.emissao)
         return self.item.filter(invoice__transaction_kind__in=['in', 'eaj'], invoice__emissao__lte=self.emissao).aggregate(Sum('quantity'))[
             'quantity__sum']
 
