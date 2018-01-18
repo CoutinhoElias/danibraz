@@ -97,6 +97,10 @@ def invoice_list_item(request):
             item.saldo = somatorio
             somatorios[item.title] = somatorio
 
+            item.pmedio = item.total/item.saldo
+
+
+
     context = {'items': items}
     print(context)
     return render(request, 'checkout/item_list.html', context)

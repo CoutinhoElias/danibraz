@@ -155,17 +155,6 @@ class Invoice(models.Model):
     def get_absolute_url(self):
         return reverse('checkout:invoice_edit', args=(self.pk,))
 
-#return self.item.filter(invoice__transaction_kind__in=['in', 'eaj'], invoice__emissao__lte=date(2014, 2, 1), title=2).aggregate(Sum('quantity'))[
-    @property
-    def entradass(self):
-        return self.item.filter(invoice__transaction_kind__in=['in', 'eaj'], invoice__emissao__lte=self.emissao).aggregate(Sum('quantity'))[
-            'quantity__sum']
-
-    @property
-    def saidas(self):
-        return self.item.filter(invoice__transaction_kind__in=['out', 'saj']).aggregate(Sum('quantity'))[
-            'quantity__sum']
-
 
 
 class Item(models.Model):
