@@ -1,0 +1,36 @@
+{% extends "account/base.html" %}
+
+{% load material_form %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Agendamento" %}{% endblock %}
+
+{% block inner %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <!--{% form form=form %}{% endform %}-->
+        {% form form=form layout=view.layout %}
+            {% part form.name prefix %}<i class="material-icons prefix">person</i>{% endpart %}
+            {% part form.birthday prefix %}<i class="material-icons prefix">perm_contact_calendar</i>{% endpart %}
+        {% endform %}
+        <button type="submit" name="_submit" class="btn">Salvar <i class="material-icons right">send</i></button>
+        <a class="waves-effect waves-light btn modal-trigger" href="#modal-persons-addesses">Endereços Modal + </a>
+        <a class="waves-effect waves-light btn modal-trigger" href="/cadastro/clientes/endereco/novo/">Endereços Template + </a>
+    </form>
+
+
+      <!-- Modal Structure -->
+      <div id="modal-persons-addesses" class="modal modal-fixed-footer">
+        <div class="modal-content">
+          <h4>Endereço</h4>
+           {{ form }}
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+        </div>
+      </div>
+
+{% endblock %}

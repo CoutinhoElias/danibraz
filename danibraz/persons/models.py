@@ -53,9 +53,6 @@ class Client(Person):
     def save(self, *args, **kwargs):
         super(Client, self).save(*args, **kwargs)
 
-    # def get_absolute_url(self):
-    #     return u'cadastro/clientes/editar/%d' % self.id
-
     def get_absolute_url(self):
         return reverse('persons:clients_editar', args=[str(self.id)])
 
@@ -79,16 +76,3 @@ class Employee(Person):
     class Meta:
         verbose_name = 'Funcionário'
         verbose_name_plural = 'Funcionários'
-
-"""---------------------------------------------------------------"""
-
-
-class Author(models.Model):
-    name = models.CharField(max_length=100)
-    title_author = models.CharField('Titulo Autor', max_length=100)
-
-class Book(models.Model):
-    author = models.ForeignKey('Author')
-    title1 = models.CharField('Titulo 1', max_length=100)
-    title2 = models.CharField('Titulo 2', max_length=100)
-    title3 = models.CharField('Titulo 3', max_length=100)

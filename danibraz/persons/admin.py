@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from danibraz.persons.models import Client, Employee, Address, Person, Author, Book
+from danibraz.persons.models import Client, Employee, Address, Person
 
 
 class AdressInline(admin.TabularInline):
@@ -30,21 +30,3 @@ class EmployeeModelAdmin(admin.ModelAdmin):
     list_display = ('name', 'birthday', 'address1', 'purchase_limit', 'ctps', 'salary')
 
 admin.site.register(Employee, EmployeeModelAdmin)
-
-
-"""----------------------------------------------------------------------------"""
-
-
-class BookInline(admin.TabularInline):
-    model = Book
-    extra = 1
-
-
-class AuthorModelAdmin(admin.ModelAdmin):
-    pass
-    inlines = [BookInline]
-    list_display = ['name']
-
-
-admin.site.register(Author, AuthorModelAdmin)
-

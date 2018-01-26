@@ -7,16 +7,18 @@
 {% block inner %}
         <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp mdl-data-table__cell--non-numeric">
           <thead class="#cfd8dc blue-grey lighten-4">
-          <th>Tp. Movimento</th>
+          <th>(B) Tp. Mov</th>
           <th>Nr. Nota</th>
-          <th>Dt. Emissao</th>
-          <th class="mdl-data-table__cell--non-numeric" >Produto</th>
-          <th class="mdl-data-table__cell--non-numeric">Quantidade</th>
-          <th>Preço unitário</th>
-          <th>Outros Custos</th>
-          <th>Total</th>
-          <th>Estoque</th>
-          <th>P.Médio</th>
+          <th>(A) Dt. Emissao</th>
+          <th class="mdl-data-table__cell--non-numeric" >(C) Produto</th>
+          <th class="mdl-data-table__cell--non-numeric">(D) Quantidade</th>
+          <th>(E) Preço unitário</th>
+          <th>(F) Outros Custos</th>
+          <th>(G) Total</th>
+          <th>(H)Estoque</th>
+          <th>E. Acum</th>
+          <th>(I) P.Médio Ant.</th>
+          <th>(I) Médio</th>
           <th></th>
           </thead>
           <tbody>
@@ -40,7 +42,10 @@
               <td>{{ item.other_costs }}</td>
               <td>{{ item.total }}</td>
               <td>{{ item.saldo }}</td>
+              <td>{{ item.acumulado_estoque|floatformat:"2" }}</td>
+              <td>{{ item.medio_ant|floatformat:"2" }}</td>
               <td>{{ item.pmedio|floatformat:"2" }}</td>
+
               <!--<td>{{ item.invoice.entradas }}</td>  -->
               <td class=""></td>
 

@@ -154,9 +154,9 @@ def clients_edit(request, person_id):
 
         request.session['person_id'] = person_id
         print('A variável person_id da session já possui o valor: '+request.session['person_id'])
-        #return HttpResponseRedirect('/cadastro/clientes/listar/')
+
         context = {'form': ClientsForm(instance=pessoa)}
-        return render(request, 'persons/person.html', context)
+        return render(request, 'persons/person_addresses.html', context)
 
 
 def employees(request):
