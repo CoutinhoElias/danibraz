@@ -6,7 +6,7 @@ from django.urls import reverse
 class Person(models.Model):
     name = models.CharField('Nome',max_length=100)
     birthday = models.DateField('Aniversário')
-    address1 = models.CharField('Endereço 1',max_length=100)
+    observation = models.CharField('Observações',max_length=100)
     purchase_limit = models.DecimalField('Limite de compra',max_digits=15, decimal_places=2)
 
 
@@ -18,7 +18,7 @@ class Person(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return u'/cadastro/pessoas'
+        return '/cadastro/pessoas'
 
 
 class Address(models.Model):
@@ -27,8 +27,8 @@ class Address(models.Model):
         ('C', 'COBRANÇA'),
         ('E', 'ENTREGA'),
     )
-    person = models.ForeignKey('persons.Person', related_name='address')
-    kynd = models.CharField('Tipo', max_length=1, choices=KINDS)
+    person = models.ForeignKey('persons.Person', related_name='addresses')
+    kind = models.CharField('Tipo', max_length=1, choices=KINDS)
     public_place = models.CharField('Logradouro',max_length=150)
     number = models.CharField('Número',max_length=150)
     city = models.CharField('Cidade',max_length=150)
@@ -40,7 +40,7 @@ class Address(models.Model):
     class Meta:
         verbose_name_plural = 'endereços'
         verbose_name = 'endereço'
-        unique_together = ('person', 'kynd')
+        unique_together = ('person', 'kind')
 
     def __str__(self):
         return self.public_place

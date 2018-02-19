@@ -35,7 +35,7 @@ class BookingsForm(forms.ModelForm):
         fields = '__all__'
 
     layout = Layout(
-        Fieldset("Inclua uma agenda",
+        Fieldset('Inclua uma agenda',
                  Row('title', ),
                  Row('start','end', 'color'),
                  Row(Span6('holiday'),Span6('authorized'), ),

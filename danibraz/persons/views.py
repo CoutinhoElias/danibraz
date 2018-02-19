@@ -118,6 +118,7 @@ def clients(request):
     if request.method == 'POST':
 
         form = ClientsForm(request.POST)
+        #address = AddressForm(request.POST)
 
         if form.is_valid():
             print('<<<<==== FORM VALIDO ====>>>>')
@@ -139,6 +140,8 @@ def clients_edit(request, person_id):
     pessoa = get_object_or_404(Client, pk=person_id)
     if request.method == 'POST':
         form = ClientsForm(request.POST, instance=pessoa)
+        addressform = AddressForm(request.POST, instance=pessoa)
+
         if form.is_valid():
             print('<<<<==== FORM VALIDO ====>>>>')
             new = form.save(commit=False)
@@ -155,7 +158,10 @@ def clients_edit(request, person_id):
         request.session['person_id'] = person_id
         print('A variável person_id da session já possui o valor: '+request.session['person_id'])
 
-        context = {'form': ClientsForm(instance=pessoa)}
+        person_instance = Person.objects.get(pk=request.session["person_id"])
+        initial_data = {"person": person_instance}
+
+        context = {'form': ClientsForm(instance=pessoa), 'addressform': AddressForm(initial=initial_data)}
         return render(request, 'persons/person_addresses.html', context)
 
 

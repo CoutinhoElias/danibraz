@@ -25,3 +25,15 @@ body {
     line-height: 48px;
     padding: 0 32px;
 }
+
+.section h5, h6 {
+    font-size: 1.2rem;
+    padding-bottom: 0.2rem;
+    border-bottom: 3px solid black;
+}
+
+.row {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0px;
+}

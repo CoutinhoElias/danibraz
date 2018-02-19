@@ -1,23 +1,183 @@
 {% extends "account/base.html" %}
-
 {% load material_form %}
-
 {% load i18n %}
-{% load crispy_forms_tags %}
-
-{% block head_title %}{% trans "Agendamento" %}{% endblock %}
+{% block head_title %}{% trans "Cadastro" %}{% endblock %}
 
 {% block inner %}
 
-    <form method="POST">
+    <form method="POST" id="person_form">
         {% csrf_token %}
-        <!--{% form form=form %}{% endform %}-->
-        {% form form=form layout=view.layout %}
-            {% part form.name prefix %}<i class="material-icons prefix">person</i>{% endpart %}
-            {% part form.birthday prefix %}<i class="material-icons prefix">perm_contact_calendar</i>{% endpart %}
+
+        {% form form=form %}
+
         {% endform %}
-        <button type="submit" name="_submit" class="btn">Avança >></button>
+
+        <a class="tiny btn-floating waves-effect waves-light modal-trigger teal greem" href="#modal-persons-addesses"><i class="tiny material-icons">add</i></a>
+        <br><br>
+
+
+        <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp mdl-data-table__cell--non-numeric" tastyle="width:100%">
+            <thead class="#cfd8dc blue-grey lighten-4">
+                <tr>
+                    <th class="mdl-data-table__header--sorted-ascending mdl-data-table__header--sorted-descending">Tipo</th>
+                    <th class="mdl-data-table__cell--non-numeric">Logradouro</th>
+                    <th>Número</th>
+                    <th>Cidade</th>
+                    <th>Estado</th>
+                    <th>Cep</th>
+                    <th>País</th>
+                    <th>Bairro</th>
+                    <th></th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tr>
+                <td>Principal</td>
+                <td>Rua 1</td>
+                <td>1234</td>
+                <td>Maracanaú</td>
+                <td>Ceará</td>
+                <td>60.160-210</td>
+                <td>Brasil</td>
+                <td>Centro</td>
+                <td><a class="tiny btn-floating waves-effect waves-light teal lighten-2"><i class="tiny material-icons">mode_edit</i></a></td>
+                <td><a class="tiny btn-floating waves-effect waves-light red"><i class="tiny material-icons">delete</i></a></td>
+            </tr>
+        </table>
+
+        <br>
+        <button type="submit" name="_submit" class="btn">Salvar</button>
     </form>
+
+
+
+
+
+      <!-- Modal Structure -->
+      <div id="modal-persons-addesses" class="modal modal-fixed-footer">
+        <div class="modal-content">
+          <h5>Endereço</h5>
+
+          <div class="row">
+            <form class="col s12">
+              <div class="row">
+
+                  <div class="input-field col s3">
+                    <select>
+                      <option value="" disabled selected>Escolha aqui</option>
+                      <option value="1">Principal</option>
+                      <option value="2">Cobrança</option>
+                      <option value="3">Entrega</option>
+                    </select>
+                    <label>Tipo</label>
+                  </div>
+
+                <div class="input-field col s3">
+                  <input id="id_zipcode" type="text" class="validate">
+                  <label for="id_zipcode">Cep</label>
+                </div>
+
+                <div class="input-field col s6">
+                  <input id="id_neighborhood" type="tel" class="validate">
+                  <label for="id_neighborhood">Bairro</label>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="input-field col s9">
+                  <input id="id_public_place" type="tel" class="validate">
+                  <label for="id_public_place">Logradouro</label>
+                </div>
+                <div class="input-field col s3">
+                  <input id="id_number" type="text" class="validate">
+                  <label for="id_number">Número</label>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="input-field col s5">
+                  <input id="id_city" type="tel" class="validate">
+                  <label for="id_city">Cidade</label>
+                </div>
+                <div class="input-field col s2">
+                  <input id="id_state" type="tel" class="validate">
+                  <label for="id_state">Estado</label>
+                </div>
+
+                <div class="input-field col s5">
+                  <input id="id_country" type="tel" class="validate">
+                  <label for="id_country">País</label>
+                </div>
+              </div>
+
+
+            </form>
+          </div>
+
+
+
+        </div>
+            <div class="modal-footer">
+              <button type="submit" name="_submit" class="btn">Salvar <i class="material-icons right">send</i></button>
+              <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancelar</a>
+            </div>
+
+            <script type="text/javascript">
+
+                  cep_value = document.getElementById("id_zipcode");
+
+                  logradouro = document.getElementById("id_public_place");
+                  bairro = document.getElementById("id_neighborhood");
+                  localidade = document.getElementById("id_city");
+                  uf = document.getElementById("id_state");
+                  country = document.getElementById("id_country");
+
+                  logradouro.readOnly = true;
+                  bairro.readOnly = true;
+                  localidade.readOnly = true;
+                  uf.readOnly = true;
+                  country.readOnly = true;
+
+                  cep_value.addEventListener("keyup",function(event){
+
+                      if (this.value.length == 8){
+
+                          headers = new Headers();
+                          headers.append("Access-Control-Allow-Origin","*")
+
+                          data = fetch("https://viacep.com.br/ws/"+ this.value +"/json/",headers)
+                             .then(function(response){
+
+                              Promise.resolve(response.json()).then(function(value){
+
+                                  logradouro.value = value.logradouro;
+                                  bairro.value = value.bairro;
+                                  localidade.value = value.localidade;
+                                  uf.value = value.uf;
+                                  country.value = 'Brasil';
+
+                                // Adiciona a classe 'active' aos campos já preenchidos, isto faz com que o
+                                // 'label' do campo fique 'alto'
+                                document.getElementById("id_neighborhood_container").childNodes[3].className="active";
+                                document.getElementById("id_public_place_container").childNodes[3].className="active";
+                                document.getElementById("id_city_container").childNodes[3].className="active";
+                                document.getElementById("id_state_container").childNodes[3].className="active";
+
+
+
+                              });
+
+                             }).catch(function(error){
+                                 console.log(error);
+                             });
+                      }
+                  });
+
+          </script>
+
+      </div>
 
 
 {% endblock %}

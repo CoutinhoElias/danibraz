@@ -4,13 +4,11 @@ from danibraz.persons.models import Client, Employee, Person, Address
 
 from django import forms
 
-#from danibraz.persons.views import AddressInline
-
 
 class ClientsForm(forms.ModelForm):
     name = forms.CharField(label='Nome', required=True)
     birthday = forms.DateField(label='Nascimento', required=False)
-    address1 = forms.CharField(label='Endereço completo')
+    observation = forms.CharField(label='Observações')
     purchase_limit = forms.DecimalField(label='Limite de compra')
     compra_sempre = forms.BooleanField(label='Compra sempre?', required=False)
 
@@ -19,19 +17,19 @@ class ClientsForm(forms.ModelForm):
         fields = '__all__'
 
     layout = Layout(
-        Fieldset("Inclua um cliente",
-                 Row('name', ),
-                 Row('birthday','purchase_limit'),
-                 Row('address1', ),
+        Fieldset('Inclua um cliente',
+                 Row(Span8('name'),Span4('birthday')),
+                 Row(Span8('purchase_limit'),Span4('observation')),
                  Row('compra_sempre', ),
-                 )
+                 ),
+        Fieldset('Lista de endereços')
     )
 
 
 class EmployeeForm(forms.ModelForm):
     name = forms.CharField(label='Nome', required=True)
     birthday = forms.DateField(label='Nascimento', required=False)
-    address1 = forms.CharField(label='Endereço completo')
+    observation = forms.CharField(label='Observações')
     purchase_limit = forms.DecimalField(label='Limite de compra')
     ctps = forms.CharField(label='Carteira de trabalho', required=False)
     salary = forms.DecimalField(label='Salário')
@@ -45,7 +43,7 @@ class EmployeeForm(forms.ModelForm):
                  Row('name', ),
                  Row(Span6('birthday'), Span6('ctps'), ),
                  Row(Span6('purchase_limit'),Span6('salary'),),
-                 Row('address1', ),
+                 Row('observation', ),
                  )
     )
 
@@ -55,7 +53,7 @@ class EmployeeForm(forms.ModelForm):
 class PersonForm(forms.ModelForm):
     name = forms.CharField(label='Nome', required=True)
     birthday = forms.DateField(label='Nascimento', required=False)
-    address1 = forms.CharField(label='Endereço completo')
+    observation = forms.CharField(label='Observações')
     purchase_limit = forms.DecimalField(label='Limite de compra')
 
     class Meta:
@@ -67,7 +65,7 @@ class PersonForm(forms.ModelForm):
         Fieldset("Inclua uma pessoa",
                  Row('name', ),
                  Row('birthday','purchase_limit'),
-                 Row('address1', ),
+                 Row('observation', ),
                  ),
         #Inline dos endereços
         #Inline('Endereços Com form', AddressInline,),
@@ -83,7 +81,7 @@ KIND = (
 
 class AddressForm(forms.ModelForm):
     person = forms.ModelChoiceField(label='Pessoa', required=True, queryset=Person.objects.all())
-    kynd = forms.ChoiceField(label='Tipo de endereço',choices=KIND)
+    kind = forms.ChoiceField(label='Tipo de endereço',choices=KIND)
     public_place = forms.CharField(label='Endereço completo')
     number = forms.CharField(label='Número')
     city = forms.CharField(label='Cidade')
@@ -100,9 +98,15 @@ class AddressForm(forms.ModelForm):
         # Campos do Persons
         Fieldset("Inclua um endereço",
                  Row('person'),
-                 Row('zipcode', 'neighborhood', 'kynd'),
+                 Row('zipcode', 'neighborhood', 'kind'),
                  Row(Span8('public_place'),Span4('number')),
                  Row(Span7('city'),Span5('state'),),
                  Row('country', ),
                  ),
     )
+
+
+AdressesInlineFormset = forms.inlineformset_factory(Person, Address,
+                                                    fields=('kind', 'public_place',
+                                                            'number', 'city', 'state', 'zipcode',
+                                                            'country', 'neighborhood'))

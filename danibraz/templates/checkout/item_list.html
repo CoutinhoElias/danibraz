@@ -19,22 +19,24 @@
           <th>E. Acum</th>
           <th>(I) P.Médio Ant.</th>
           <th>(I) Médio</th>
+          <th>Lucro/Prejuizo</th>
           <th></th>
           </thead>
           <tbody>
           {% for item in items %}
             <tr class="item-form {% if item.saldo < 0 %}red-text{% endif %}">
-                   <td>{% if item.invoice.transaction_kind == 'out'%}
-                            SAIDA
-                        {% elif item.invoice.transaction_kind == 'in' %}
-                            ENTRADA
-                        {% elif item.invoice.transaction_kind == 'eaj' %}
-                            ENT. AJUSTE
-                        {% elif item.invoice.transaction_kind == 'saj' %}
-                            SAI. AJUSTE
-                        {% endif %}
-                   </td>
-              <td>{{ item.invoice.pk }}</td>
+               <td>{% if item.invoice.transaction_kind == 'out'%}
+                        SAIDA
+                    {% elif item.invoice.transaction_kind == 'in' %}
+                        ENTRADA
+                    {% elif item.invoice.transaction_kind == 'eaj' %}
+                        ENT. AJUSTE
+                    {% elif item.invoice.transaction_kind == 'saj' %}
+                        SAI. AJUSTE
+                    {% endif %}
+               </td>
+
+              <td><a href="{{ item.invoice.get_absolute_url }}">{{ item.invoice.pk|linebreaks }}</a></td>
               <td>{{ item.invoice.emissao|date:"d/m/Y" }}</td>
               <td>{{ item.title}}</td>
               <td>{{ item.quantity }}</td>
@@ -45,6 +47,7 @@
               <td>{{ item.acumulado_estoque|floatformat:"2" }}</td>
               <td>{{ item.medio_ant|floatformat:"2" }}</td>
               <td>{{ item.pmedio|floatformat:"2" }}</td>
+              <td>{{ item.apuracao|floatformat:"2" }}</td>
 
               <!--<td>{{ item.invoice.entradas }}</td>  -->
               <td class=""></td>
