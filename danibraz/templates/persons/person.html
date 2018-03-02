@@ -1,7 +1,9 @@
+
 {% extends "account/base.html" %}
 {% load material_form %}
 {% load i18n %}
 {% block head_title %}{% trans "Cadastro" %}{% endblock %}
+{% load static %}
 
 {% block inner %}
 
@@ -13,10 +15,10 @@
         {% endform %}
 
         <a class="tiny btn-floating waves-effect waves-light modal-trigger teal greem" href="#modal-persons-addesses"><i class="tiny material-icons">add</i></a>
+
         <br><br>
 
-
-        <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp mdl-data-table__cell--non-numeric" tastyle="width:100%">
+        <table id="address_table" class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp mdl-data-table__cell--non-numeric" tastyle="width:100%">
             <thead class="#cfd8dc blue-grey lighten-4">
                 <tr>
                     <th class="mdl-data-table__header--sorted-ascending mdl-data-table__header--sorted-descending">Tipo</th>
@@ -32,18 +34,23 @@
 
                 </tr>
             </thead>
-            <tr>
-                <td>Principal</td>
-                <td>Rua 1</td>
-                <td>1234</td>
-                <td>Maracanaú</td>
-                <td>Ceará</td>
-                <td>60.160-210</td>
-                <td>Brasil</td>
-                <td>Centro</td>
-                <td><a class="tiny btn-floating waves-effect waves-light teal lighten-2"><i class="tiny material-icons">mode_edit</i></a></td>
-                <td><a class="tiny btn-floating waves-effect waves-light red"><i class="tiny material-icons">delete</i></a></td>
-            </tr>
+
+            <tbody>
+
+                <tr>
+                    <td>Principal</td>
+                    <td>Rua 1</td>
+                    <td>1234</td>
+                    <td>Maracanaú</td>
+                    <td>Ceará</td>
+                    <td>60.160-210</td>
+                    <td>Brasil</td>
+                    <td>Centro</td>
+                    <td><a class="tiny btn-floating waves-effect waves-light teal lighten-2"><i class="tiny material-icons">mode_edit</i></a></td>
+                    <td><a class="tiny btn-floating waves-effect waves-light red"><i class="tiny material-icons">delete</i></a></td>
+                </tr>
+
+            </tbody>
         </table>
 
         <br>
@@ -64,7 +71,7 @@
               <div class="row">
 
                   <div class="input-field col s3">
-                    <select>
+                    <select id="id_tipo">
                       <option value="" disabled selected>Escolha aqui</option>
                       <option value="1">Principal</option>
                       <option value="2">Cobrança</option>
@@ -120,64 +127,65 @@
 
         </div>
             <div class="modal-footer">
-              <button type="submit" name="_submit" class="btn">Salvar <i class="material-icons right">send</i></button>
+              <button type="button" id="btn_save" name="_submit" class="btn">Salvar <i class="material-icons right">send</i></button>
               <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancelar</a>
             </div>
-
-            <script type="text/javascript">
-
-                  cep_value = document.getElementById("id_zipcode");
-
-                  logradouro = document.getElementById("id_public_place");
-                  bairro = document.getElementById("id_neighborhood");
-                  localidade = document.getElementById("id_city");
-                  uf = document.getElementById("id_state");
-                  country = document.getElementById("id_country");
-
-                  logradouro.readOnly = true;
-                  bairro.readOnly = true;
-                  localidade.readOnly = true;
-                  uf.readOnly = true;
-                  country.readOnly = true;
-
-                  cep_value.addEventListener("keyup",function(event){
-
-                      if (this.value.length == 8){
-
-                          headers = new Headers();
-                          headers.append("Access-Control-Allow-Origin","*")
-
-                          data = fetch("https://viacep.com.br/ws/"+ this.value +"/json/",headers)
-                             .then(function(response){
-
-                              Promise.resolve(response.json()).then(function(value){
-
-                                  logradouro.value = value.logradouro;
-                                  bairro.value = value.bairro;
-                                  localidade.value = value.localidade;
-                                  uf.value = value.uf;
-                                  country.value = 'Brasil';
-
-                                // Adiciona a classe 'active' aos campos já preenchidos, isto faz com que o
-                                // 'label' do campo fique 'alto'
-                                document.getElementById("id_neighborhood_container").childNodes[3].className="active";
-                                document.getElementById("id_public_place_container").childNodes[3].className="active";
-                                document.getElementById("id_city_container").childNodes[3].className="active";
-                                document.getElementById("id_state_container").childNodes[3].className="active";
-
-
-
-                              });
-
-                             }).catch(function(error){
-                                 console.log(error);
-                             });
-                      }
-                  });
-
-          </script>
 
       </div>
 
 
 {% endblock %}
+
+{% block js %}
+<script src="{% static 'js/add_address.js' %}"></script>
+
+<script type="text/javascript">
+
+    cep_value = document.getElementById("id_zipcode");
+
+    logradouro = document.getElementById("id_public_place");
+    bairro = document.getElementById("id_neighborhood");
+    localidade = document.getElementById("id_city");
+    uf = document.getElementById("id_state");
+    country = document.getElementById("id_country");
+
+    logradouro.readOnly = true;
+    bairro.readOnly = true;
+    localidade.readOnly = true;
+    uf.readOnly = true;
+    country.readOnly = true;
+
+    cep_value.addEventListener("keyup",function(event){
+
+        if (this.value.length == 8){
+
+            headers = new Headers();
+            headers.append("Access-Control-Allow-Origin","*")
+
+            data = fetch("https://viacep.com.br/ws/"+ this.value +"/json/",headers)
+                .then(function(response){
+
+                    Promise.resolve(response.json()).then(function(value){
+
+                        logradouro.value = value.logradouro;
+                        bairro.value = value.bairro;
+                        localidade.value = value.localidade;
+                        uf.value = value.uf;
+                        country.value = 'Brasil';
+
+                        // Adiciona a classe 'active' aos campos já preenchidos, isto faz com que o
+                        // 'label' do campo fique 'alto'
+                        document.getElementById("id_neighborhood_container").className='active';
+                        document.getElementById("id_public_place_container").childNodes[3].className='active';
+                        document.getElementById("id_city_container").childNodes[3].className='active';
+                        document.getElementById("id_state_container").childNodes[3].className='active';
+                    });
+
+                }).catch(function(error){
+                    console.log(error);
+                });
+        }
+    });
+    $('#btn_save').click(addNewAddress);
+</script>
+{% endblock%}
