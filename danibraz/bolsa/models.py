@@ -5,6 +5,7 @@ from django.db import models
 # Casas decimaispara o valor= 4  okokokok
 # Lançar os custos em um inline e o sistema aglutinae leva para o movimento. okokokok/2
 from django.db.models import Sum
+from django.urls import reverse
 
 OPERACAO_CHOICES = (
     ('C', 'COMPRA'),
@@ -150,3 +151,6 @@ class PlanoDeContas(models.Model):
     n = models.CharField('N', max_length=5)
     source = models.CharField('Origem', max_length=100)
     account_type = models.CharField('Tipo Conta', max_length=100)
+
+    def get_absolute_url(self):
+        return reverse('checkout:invoice_edit', args=(self.pk,))
