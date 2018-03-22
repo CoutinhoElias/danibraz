@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls includes go here
+    url(r'^bolsa/', include('danibraz.bolsa.urls', namespace='bolsa')),
     url(r'^cadastro/', include('danibraz.persons.urls', namespace='persons')),
     url(r'^reserva/', include('danibraz.bookings.urls', namespace='booking')),
     url(r'^lancamento/', include('danibraz.checkout.urls', namespace='checkout')),

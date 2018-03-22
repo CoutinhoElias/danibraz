@@ -55,17 +55,18 @@ THIRD_PARTY_APPS = [
     'allauth',  # registration
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
+    'import_export',
 ]
 
 # Apps specific for this project go here.
 LOCAL_APPS = [
     # custom users app
-    'danibraz.users.apps.UsersConfig',
-    'danibraz.bookings.apps.BookingsConfig',
+    'users.apps.UsersConfig',
+    'bookings.apps.BookingsConfig',
     # Your stuff: custom apps go here
-    'danibraz.persons.apps.PersonsConfig',
-    'danibraz.bolsa.apps.BolsaConfig',
-    'danibraz.checkout.apps.CheckoutConfig',
+    'persons.apps.PersonsConfig',
+    'bolsa.apps.BolsaConfig',
+    'checkout.apps.CheckoutConfig',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -294,3 +295,5 @@ ADMIN_URL = r'^admin/'
 
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
+FILE_UPLOAD_HANDLERS  =  ( "django_excel.ExcelMemoryFileUploadHandler" ,
+                        "django_excel.TemporaryExcelFileUploadHandler" )

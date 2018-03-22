@@ -7,6 +7,9 @@ function addNewAddress(evt){
     public_place = $("#id_public_place").val()
     country = $("#id_country").val()
     neighborhood = $("#id_neighborhood").val()
+    edit =   '<a type="hidden" class="tiny btn-floating waves-effect waves-light teal lighten-2"><i class="tiny material-icons">mode_edit</i></a>'
+    mode_delete =   '<a class="tiny btn-floating waves-effect waves-light red"><i class="tiny material-icons">delete</i></a>'
+
 
     row = $("<tr>")
     input_tipo = $('<input type="hidden">').val(tipo)
@@ -39,7 +42,15 @@ function addNewAddress(evt){
                  
     input_neighborhood = $('<input type="hidden">').val(neighborhood)
     col_neighborhood = $("<td>").html(neighborhood).append(input_neighborhood)
-    row.append(col_neighborhood)                  
+    row.append(col_neighborhood)
+
+    input_edit = $().val(edit)
+    col_edit = $("<td>").html(edit).append(input_edit)
+    row.append(col_edit)
+
+    input_mode_delete = $().val(mode_delete)
+    col_mode_delete = $("<td>").html(mode_delete).append(input_mode_delete)
+    row.append(col_mode_delete)
 
 
     $('#address_table tbody').append(row)
