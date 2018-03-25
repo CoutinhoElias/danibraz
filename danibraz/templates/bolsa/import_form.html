@@ -17,8 +17,8 @@
 
 {% block inner %}
 
-    <form method="POST">
-        <!--{% csrf_token %}-->
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <!--{% form form=form %}{% endform %}-->
         {% form form=form %}
 

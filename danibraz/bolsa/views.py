@@ -21,10 +21,11 @@ def export(request):
     return response
 
 
-def importaPlanilha(request):
+def importaPlanilha(request, file):
     # from danibraz.bolsa.models import PlanoDeContas
     # import xlrd
-    workbook = xlrd.open_workbook("/home/eliaspai/Área de Trabalho/Plano de Contas.xls")
+    #workbook = xlrd.open_workbook("/home/eliaspai/Área de Trabalho/Plano de Contas.xls")
+    workbook = xlrd.open_workbook(file)
     #workbook = xlrd.open_workbook("/home/eliaspai/Área de Trabalho/MODELO_PLANO_DE_CONTAS_PARA_IMPORTAR.xls")
 
     worksheet = workbook.sheet_by_name("Plan1")
@@ -103,6 +104,7 @@ from .forms import FileUploadForm
 def upload_file(request):
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
+        print(str(request.FILES))
         if form.is_valid():
             importaPlanilha(request.FILES['file'])
             return HttpResponseRedirect('/bolsa/importar/')
