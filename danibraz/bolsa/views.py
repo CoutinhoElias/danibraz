@@ -2,9 +2,10 @@
 import logging
 from django.core.checks import messages
 from django.http import HttpResponse, request, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.urls import reverse
 
+from danibraz.bolsa.forms import FileUploadForm
 from .admin import PlanoDeContasResource
 from danibraz.bolsa.models import PlanoDeContas
 
@@ -18,7 +19,6 @@ def export(request):
     response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename="persons.xls"'
     return response
-
 
 
 def importaPlanilha(request):
@@ -73,7 +73,45 @@ def planodecontas_list(request):
     return render(request, 'bolsa/bolsa_list.html', context)
 
 
-def upload_xls(request):
+def upload_xls2(request):
+    if request.method == 'POST': # If the form has been submitted...
+        form = FileUploadForm(request.POST) # Um form com os dados de POST
+        if form.is_valid(): # All validation rules pass
+            # Processa os dados no form.cleaned_data
+            # ...
+            #csv_file = request.FILES["csv_file"]
+            csv_file = request.FILES['csv_file']
+
+            print(csv_file)
+            
+            return HttpResponseRedirect('/thanks/') # Redireciona depois do POST
+    else:
+        form = FileUploadForm() # Um formulário vazio
+
+    return render_to_response('bolsa/import_form.html', {
+        'form': form,
+    })
+
+
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from .forms import FileUploadForm
+
+# Imaginary function to handle an uploaded file.
+#from somewhere import handle_uploaded_file
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = FileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            importaPlanilha(request.FILES['file'])
+            return HttpResponseRedirect('/bolsa/importar/')
+    else:
+        form = FileUploadForm()
+    return render(request, 'bolsa/import_form.html', {'form': form})
+
+
+def upload_xls1(request):
     data = {}
 
     if "GET" == request.method:
@@ -83,12 +121,12 @@ def upload_xls(request):
         xls_file = request.FILES["xls_file"]
         if not xls_file.name.endswith('.xls'):
             messages.error(request, 'File is not xls type')
-            return HttpResponseRedirect(reverse("myapp:upload_xls"))
+            return HttpResponseRedirect(reverse('bolsa:upload_xls'))
         # if file is too large, return
         if xls_file.multiple_chunks():
             messages.error(request, "Uploaded file is too big (%.2f MB)." % (xls_file.size / (1000 * 1000),))
-            return HttpResponseRedirect(reverse("myapp:upload_xls"))
-
+            return HttpResponseRedirect(reverse('bolsa:upload_xls'))
+#{% url 'bolsa:upload_xls' %}
         file_data = xls_file.read().decode("utf-8")
 
         lines = file_data.split("\n")

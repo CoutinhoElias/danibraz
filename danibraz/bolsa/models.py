@@ -151,6 +151,6 @@ class PlanoDeContas(models.Model):
     n = models.CharField('N', max_length=5)
     source = models.CharField('Origem', max_length=100)
     account_type = models.CharField('Tipo Conta', max_length=100)
-
-    def get_absolute_url(self):
-        return reverse('checkout:invoice_edit', args=(self.pk,))
+    #
+    # def get_absolute_url(self):
+    #     return reverse('bolsa:invoice_edit', args=(self.pk,))

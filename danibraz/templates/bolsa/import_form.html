@@ -17,20 +17,14 @@
 
 {% block inner %}
 
-  <form action="{% url 'bolsa:upload_xls' %}" enctype="multipart/form-data">
-    <div class="file-field input-field">
-      <div class="btn">
-        <span>Arquivo</span>
-        <input type="file">
-      </div>
-      <div class="file-path-wrapper">
-        <input class="file-path validate" type="text">
-      </div>
-    </div>
+    <form method="POST">
+        <!--{% csrf_token %}-->
+        <!--{% form form=form %}{% endform %}-->
+        {% form form=form %}
 
-    <a class="waves-effect waves-light btn" type="submit"><i class="material-icons right">cloud</i>Importar</a>
-    <button type="submit" name="_submit" class="btn">Importar</button>
-  </form>
+        {% endform %}
+        <button type="submit" name="_submit" class="btn">Submit</button>
+    </form>
 
 
 {% endblock %}
