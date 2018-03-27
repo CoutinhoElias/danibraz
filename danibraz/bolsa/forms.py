@@ -3,4 +3,4 @@ from django import forms
 
 class FileUploadForm(forms.Form):
     """File upload form."""
-    file = forms.FileField(required=False)
+    excelfile = forms.FileField(required=True)

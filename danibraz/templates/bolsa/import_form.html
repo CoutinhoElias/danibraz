@@ -17,14 +17,11 @@
 
 {% block inner %}
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <!--{% form form=form %}{% endform %}-->
-        {% form form=form %}
-
-        {% endform %}
-        <button type="submit" name="_submit" class="btn">Submit</button>
-    </form>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="excelfile">
+    <button type="submit">Upload</button>
+  </form>
 
 
 {% endblock %}
