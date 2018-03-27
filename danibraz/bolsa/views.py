@@ -66,20 +66,13 @@ def simple_upload(request):
     if request.method == 'POST' and request.FILES['excelfile']:
         myfile = request.FILES['excelfile']
         fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
-        uploaded_file_url = fs.url(filename)
-        dir = fs.open(myfile.name, mode = 'rb' )
-        print('-----------------------------------------------------')
-        print('Diretório:  ', dir)
-        print('myfile.name:  ',myfile.name)
-        print('myfile:  ', myfile)
-        print('FileSystemStorage:  ', fs)
-        print('filename:  ', filename)
-        print('uploaded_file_url:  ', uploaded_file_url)
-        print('-----------------------------------------------------')
+        # filename = fs.save(myfile.name, myfile)
+        # uploaded_file_url = fs.url(filename)
+        dir = fs.path(myfile.name)
+
         importaPlanilha(dir)
 
-        return HttpResponseRedirect('/bolsa/importar/')
+        return HttpResponseRedirect('/bolsa/planodecontas/listar/')
 
     return render(request, 'bolsa/import_form.html')
 
@@ -121,9 +114,10 @@ def importaPlanilha(dir):
 
     PlanoDeContas.objects.bulk_create(lista)
 
-    planodecontas = PlanoDeContas.objects.all()
-    context = {'planodecontas': planodecontas}
-    return render(request, 'bolsa/bolsa_list.html', context)
+    #planodecontas = PlanoDeContas.objects.all()
+    # context = {'planodecontas': planodecontas}
+    # return render(request, 'bolsa/bolsa_list.html', context)
+    return HttpResponseRedirect('/bolsa/planodecontas/listar/')
 
 
 def planodecontas_list(request):
@@ -137,18 +131,3 @@ def planodecontas_list(request):
     context = {'planodecontas': planodecontas}
     print(context)
     return render(request, 'bolsa/bolsa_list.html', context)
-
-
-def upload_file(request):
-    if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            importaPlanilha(request.FILES['excelfile'])
-            f = request.FILES['excelfile']
-            print(f)
-            return HttpResponseRedirect('/bolsa/importar/')
-            #return excel.make_response(filehandle.get_sheet(), "csv")
-    else:
-        form = FileUploadForm()
-    return render(request, 'bolsa/import_form.html', {'form': form})

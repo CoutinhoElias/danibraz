@@ -1,14 +1,13 @@
 from django.conf.urls import url, include
 from django.views.i18n import JavaScriptCatalog
 
-from danibraz.bolsa.views import importaPlanilha, planodecontas_list, upload_xls2, upload_file, simple_upload
+from danibraz.bolsa.views import importaPlanilha, planodecontas_list, upload_xls2, simple_upload
 
 urlpatterns = [
-    url(r'^importar/$', importaPlanilha, name='importaPlanilha'),
+    #url(r'^importar/$', importaPlanilha, name='importaPlanilha'),
     url(r'planodecontas/listar/$', planodecontas_list, name='planodecontas_list'),
-    url(r'planodecontas/importar1/$', upload_xls2, name='upload_xls'),
-    url(r'planodecontas/importar2/$', upload_file, name='upload_file'),
-    url(r'planodecontas/importar3/$', simple_upload, name='simple_upload'),
+
+    url(r'planodecontas/importar/$', simple_upload, name='simple_upload'),
 
     url(r'^jsi18n/$', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     url(r'^i18n/', include('django.conf.urls.i18n')),
