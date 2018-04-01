@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^pedido/novo/$', invoices_create, name='invoice_add'),
     url(r'^pedido/editar/(?P<pk>\d+)$', invoices_update,name='invoice_edit'),
     url(r'^pedido/deletar/(?P<pk>\d+)$', invoices_delete,name='invoice_delete'),
-    url(r'pedido/listar/$', invoice_list, name='invoice_list'),
+    url(r'^pedido/listar/$', invoice_list, name='invoice_list'),
 
     url(r'calculo/listar/$', invoice_list_item, name='invoice_list_item'),
 

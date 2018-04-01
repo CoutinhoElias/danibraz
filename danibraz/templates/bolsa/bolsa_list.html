@@ -9,10 +9,7 @@
 {% block inner %}
 
         <form method="GET">
-          <div class="row">
-            <form class="col s12">
-              <div class="row">
-                <div class="input-field col s10">
+             <div class="input-field col s9">
                   <input id="search_box" type="text" class="validate" name="search_box">
                   <label for="search_box">Digite o nome da conta desejada:</label>
                 </div>
@@ -20,40 +17,36 @@
                 <button class="btn waves-effect waves-light" type="submit">Search
                     <i class="material-icons right">search</i>
                 </button>
-              </div>
-            </form>
-          </div>
         </form>
 
-        <table class="bordered highlight">
-            <thead class="#cfd8dc blue-grey lighten-4">
+        <table class="bordered striped responsive-table">
+            <thead class="blue-grey lighten-4">
                 <tr>
                     <th>Classificação</th>
                     <!--<th>N.Classificação</th>-->
                     <th>Descrição</th>
-                    <th>Cta.reduzida</th>
-                    <th>SN</th>
-                    <th>N</th>
-                    <th>Tp. Conta</th>
+                    <th>Cód.</th>
+                    <!--<th>SN</th>-->
+                    <!--<th>N</th>-->
+                    <th>Origem</th>
                 </tr>
             </thead>
 
             <tbody>
 
                 {% for conta in planodecontas %}
-                    <tr>
+                    <tr style="line-height:0.0" >
                         <!--<td>-->
                             <!--<a href="{{ conta.get_absolute_url }}">{{ conta.classification|linebreaks }}</a>-->
                         <!--</td>-->
-                        <td class="mdl-data-table__cell--non-numeric">{{ conta.new_classification|linebreaks }}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{ conta.name|linebreaks }}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{ conta.reduced_account|linebreaks }}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{ conta.sn|linebreaks }}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{ conta.n|linebreaks }}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{ conta.source|linebreaks }}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{ conta.account_type|linebreaks }}</td>
-
-
+                        <td>{{ conta.classification|linebreaks }}</td>
+                        <td>{{ conta.name|linebreaks }}</td>
+                        <td>{{ conta.reduced_account|linebreaks }}</td>
+                        <!--<td>{{ conta.sn|linebreaks }}</td>-->
+                        <!--<td>{{ conta.n|linebreaks }}</td>-->
+                        <!--<td>{{ conta.source|linebreaks }}</td>-->
+                        <td>{{ conta.account_type|linebreaks }}</td>
+                        
                     </tr>
                 {% empty %}
                     <li>

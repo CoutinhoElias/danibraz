@@ -55,7 +55,7 @@ from django.contrib import admin
 
 @admin.register(PlanoDeContas)
 class PlanoDeContasAdmin(ImportExportModelAdmin):
-    list_display = ('classification', 'new_classification','name', 'reduced_account', 'sn', 'n', 'account_type')
+    list_display = ('classification', 'name', 'reduced_account', 'sn', 'n', 'account_type')
 
     actions = ['remove_charactere', 'include_charactere']
 
@@ -66,11 +66,11 @@ class PlanoDeContasAdmin(ImportExportModelAdmin):
 
         # limpa os dados
         for planodecontas_obj in queryset_planodecontas:
-            dado_a_limpar = planodecontas_obj.new_classification
+            dado_a_limpar = planodecontas_obj.classification
             dado_limpo = dado_a_limpar.replace("-", "").replace(".", "")
-            planodecontas_obj.new_classification = dado_limpo
+            planodecontas_obj.classification = dado_limpo
 
-        bulk_update(queryset_planodecontas, update_fields=['new_classification'], batch_size=5000)
+        bulk_update(queryset_planodecontas, update_fields=['classification'], batch_size=5000)
 
     def include_charactere(self, request, queryset):
         import re
@@ -96,7 +96,7 @@ class PlanoDeContasAdmin(ImportExportModelAdmin):
 
         dados = []
         for plano in PlanoDeContas.objects.all():
-            plano.new_classification = formatar(plano.new_classification)
+            plano.classification = formatar(plano.classification)
             dados.append(plano)
 
         bulk_update(dados)

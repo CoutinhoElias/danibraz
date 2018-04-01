@@ -19,8 +19,18 @@
 
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="file" name="excelfile">
-    <button type="submit">Upload</button>
+    <div class="file-field input-field">
+      <div class="btn">
+        <span>File</span>
+        <input type="file" name="excelfile">
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path validate" type="text" placeholder="Upload de arquivos.">
+      </div>
+    </div>
+
+  <button class="btn waves-effect waves-light" type="submit" name="action">Importa</button>
+
   </form>
 
 

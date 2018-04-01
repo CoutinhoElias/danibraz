@@ -197,6 +197,29 @@
                       </div>
                     </li>
 
+                    <li><a class="collapsible-header  waves-effect waves-teal">{% trans "Contabil" %}</a>
+                      <div class="collapsible-body">
+                        <ul>
+                          {% if request.user.is_authenticated %}
+                            <li>
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a href="{% url 'bolsa:planodecontas_list'  %}">{% trans "Lista Plano de contas" %}</a>
+                            </li>
+
+                            <li>
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a href="{% url 'bolsa:simple_upload'  %}">{% trans "Plano de contas Importar" %}</a>
+                            </li>
+
+                            <li>
+                              {# URL provided by django-allauth/account/urls.py #}
+                              <a href="{% url 'bolsa:planodecontas_export'  %}">{% trans "Plano de contas Exportar" %}</a>
+                            </li>
+                          {% endif %}
+                        </ul>
+                      </div>
+                    </li>
+
                     <li class="bold"><a class="collapsible-header waves-effect waves-teal">{% trans "Calculos" %}</a>
                       <div class="collapsible-body">
                         <ul>
